@@ -1,5 +1,5 @@
 {
-  "name": "m3e-canvas",
+  "name": "web-design",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -32,7 +32,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lnkiai/m3e-canvas.git"
+    "url": "https://github.com/nhwin304/web-design.git"
   },
-  "homepage": "https://lnkiai.github.io/m3e-canvas/"
+  "homepage": "https://nhwin304.github.io/web-design/"
 }
