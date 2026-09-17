@@ -1,0 +1,137 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # Check for a new upstream revision every hour at minute 17.
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/sync-upstream.yml
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout web-design
+        uses: actions/checkout@v7
+        with:
+          path: web-design
+          fetch-depth: 0
+
+      - name: Checkout m3e-canvas
+        uses: actions/checkout@v7
+        with:
+          repository: lnkiai/m3e-canvas
+          ref: main
+          path: upstream
+          fetch-depth: 0
+
+      - name: Check upstream revision
+        id: check
+        shell: bash
+        run: |
+          upstream_sha="$(git -C upstream rev-parse HEAD)"
+          current_sha="$(tr -d '[:space:]' < web-design/.github/upstream-revision)"
+          echo "upstream_sha=$upstream_sha" >> "$GITHUB_OUTPUT"
+          echo "current_sha=$current_sha" >> "$GITHUB_OUTPUT"
+
+          git -C upstream cat-file -e "$current_sha^{commit}"
+
+          if [ "$upstream_sha" = "$current_sha" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "web-design already matches upstream revision $upstream_sha."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "New upstream revision: $upstream_sha"
+          fi
+
+      - name: Create safe upstream patch
+        if: steps.check.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git -C upstream diff --binary \
+            "${{ steps.check.outputs.current_sha }}" \
+            "${{ steps.check.outputs.upstream_sha }}" \
+            -- . ':(exclude).github/workflows/**' > upstream.patch
+
+      - name: Apply upstream patch
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        shell: bash
+        run: |
+          cp package.json ../package.web-design.json
+          cp package-lock.json ../package-lock.web-design.json
+
+          git -C ../upstream show "${{ steps.check.outputs.current_sha }}:package.json" > package.json
+          git -C ../upstream show "${{ steps.check.outputs.current_sha }}:package-lock.json" > package-lock.json
+
+          if ! git apply --check --binary ../upstream.patch; then
+            cp ../package.web-design.json package.json
+            cp ../package-lock.web-design.json package-lock.json
+            echo "Upstream conflicts with local custom code. No files were committed."
+            exit 1
+          fi
+
+          git apply --binary ../upstream.patch
+
+          npm pkg set name="web-design"
+          npm pkg set repository.type="git"
+          npm pkg set repository.url="https://github.com/nhwin304/web-design.git"
+          npm pkg set homepage="https://nhwin304.github.io/web-design/"
+          npm install --package-lock-only --ignore-scripts
+
+          printf '%s\n' "${{ steps.check.outputs.upstream_sha }}" > .github/upstream-revision
+
+      - name: Install dependencies
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        run: npm ci
+
+      - name: Typecheck
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        run: npm run typecheck
+
+      - name: Test
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        run: npm test
+
+      - name: Build
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
+
+      - name: Commit synchronized source
+        if: steps.check.outputs.changed == 'true'
+        working-directory: web-design
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+
+          if git diff --cached --quiet; then
+            echo "No source changes after synchronization."
+          else
+            git commit -m "chore: sync lnkiai/m3e-canvas@${{ steps.check.outputs.upstream_sha }}"
+            git push origin HEAD:main
+          fi
+
+      - name: Deploy updated site
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main --repo "$GITHUB_REPOSITORY"
