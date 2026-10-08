@@ -410,6 +410,8 @@ export const UI = {
   exitFullscreen: { ja: "全画面を閉じる", en: "Close full screen", zh: "关闭全屏" },
   outline: { ja: "構成", en: "Outline", zh: "结构" },
   screenLook: { ja: "画面の色", en: "Screen colour", zh: "屏幕颜色" },
+  scrolling: { ja: "スクロール", en: "Scrolling", zh: "滚动" },
+  screenLength: { ja: "画面の長さ", en: "Screen length", zh: "屏幕长度" },
   shapeHint: {
     ja: "すべての部品の初期の角丸をまとめて変えます。部品ごとに入力した角丸はそのまま残ります。",
     en: "Changes the default corners of every part at once. A radius you typed on a part stays as it is.",
@@ -491,7 +493,7 @@ export const KO: Record<UIKey, string> = {
   frameSize: "화면 크기", phoneFrame: "휴대전화", desktopFrame: "데스크톱", columnWidth: "휴대전화 한 화면 너비", cornerLeft: "왼쪽 모서리", cornerRight: "오른쪽 모서리", cornersEach: "모서리별로 지정", cornerTl: "왼쪽 위", cornerTr: "오른쪽 위", cornerBl: "왼쪽 아래", cornerBr: "오른쪽 아래",
   filled: "채움", tonal: "색조", elevated: "그림자", outlined: "윤곽선", standard: "표준", vibrant: "선명함",
   styleSurface: "표준", stylePrimary: "기본색", styleSecondary: "보조색",
-  fullscreen: "전체 화면으로 편집", exitFullscreen: "전체 화면 닫기", outline: "구성", screenLook: "화면 색상",
+  fullscreen: "전체 화면으로 편집", exitFullscreen: "전체 화면 닫기", outline: "구성", screenLook: "화면 색상", scrolling: "스크롤", screenLength: "화면 길이",
   parts: "부품", layers: "레이어", edit: "편집", prompt: "프롬프트", closePanel: "패널 닫기",
   search: "검색", favorites: "즐겨찾기", addFavorite: "즐겨찾기에 추가", removeFavorite: "즐겨찾기에서 제거", clear: "지우기", language: "언어",
   select: "선택", hand: "손 도구", blank: "빈 캔버스", phone: "휴대전화 화면", addFrame: "화면 추가", preview: "미리보기",
