@@ -63,6 +63,7 @@ const VARIANT_TEXT: Record<Lang, Record<Variant, string>> = {
   en: { filled: "filled", tonal: "tonal", elevated: "elevated", outlined: "outlined", text: "text" },
   zh: { filled: "填充", tonal: "色调", elevated: "浮起", outlined: "描边", text: "文字" },
   ko: { filled: "채움", tonal: "토널", elevated: "돌출", outlined: "윤곽선", text: "텍스트" },
+  vi: { filled: "nền đặc", tonal: "theo tông màu", elevated: "nổi", outlined: "có viền", text: "chỉ văn bản" },
 };
 
 const hasText = (s?: string | null) => !!s && s.trim().length > 0;
@@ -245,18 +246,21 @@ const CAROUSEL_TEXT: Record<Lang, Record<CarouselLayout, string>> = {
   en: { multiBrowse: "multi-browse", uncontained: "uncontained", hero: "hero", fullScreen: "full-screen" },
   zh: { multiBrowse: "多浏览", uncontained: "等宽滚动", hero: "主图", fullScreen: "全屏" },
   ko: { multiBrowse: "멀티 브라우즈", uncontained: "언컨테인드", hero: "히어로", fullScreen: "전체 화면" },
+  vi: { multiBrowse: "duyệt nhiều mục", uncontained: "không giới hạn khung", hero: "nổi bật", fullScreen: "toàn màn hình" },
 };
 const DATE_TEXT: Record<Lang, Record<DateLayout, string>> = {
   ja: { modal: "モーダルのダイアログ", docked: "入力欄に付くドッキング", input: "入力欄のみ" },
   en: { modal: "modal dialog", docked: "docked under a field", input: "text input only" },
   zh: { modal: "模态对话框", docked: "停靠在输入框下", input: "仅输入框" },
   ko: { modal: "모달 대화상자", docked: "입력란에 붙는 도킹", input: "입력란만" },
+  vi: { modal: "hộp thoại", docked: "gắn dưới ô nhập", input: "chỉ ô nhập" },
 };
 const TIME_TEXT: Record<Lang, Record<TimeLayout, string>> = {
   ja: { dial: "時計盤", input: "入力欄" },
   en: { dial: "dial", input: "text input" },
   zh: { dial: "表盘", input: "输入框" },
   ko: { dial: "시계판", input: "입력란" },
+  vi: { dial: "mặt đồng hồ", input: "ô nhập" },
 };
 
 /** a chip drawn at anything but the 32dp M3 asks for says so */
@@ -1084,6 +1088,8 @@ const WIDE_RAIL_STYLE: Record<Lang, string> = {
   en: "M3 Expressive navigation rail: 96dp wide when collapsed, with labels below icons. Expanded width is 220dp, with 56dp-high destinations and horizontal icon/label rows separated by 8dp. Match the existing top app bar with a surfaceContainer background in both modes, whether collapsed or expanded. The selected destination uses a secondaryContainer pill, onSecondaryContainer icon, and a label that prefers secondary. If its contrast against the actual background (surfaceContainer when collapsed, secondaryContainer when expanded) is below 4.5:1, use onSurface / onSecondaryContainer respectively. A top menu button toggles expansion. The non-modal variant sits beside the content; the modal variant overlays it with a scrim when expanded and blocks background interaction. Dismiss with a scrim tap or Escape.",
   zh: "M3 Expressive 侧边导航栏：折叠宽 96dp，标签位于图标下方。展开宽 220dp，项目高 56dp，图标与标签横向排列，间距 8dp。沿用现有顶部应用栏配色，两种模式在折叠与展开时均使用 surfaceContainer 背景。选中项用 secondaryContainer 胶囊指示器，图标为 onSecondaryContainer，文字优先使用 secondary；若与实际背景（折叠为 surfaceContainer，展开为 secondaryContainer）的对比度低于 4.5:1，则分别使用 onSurface / onSecondaryContainer。顶部菜单按钮切换展开与折叠。非模态型位于内容旁；模态型展开时带遮罩覆盖内容并阻止背景交互，点击遮罩或按 Escape 关闭。",
   ko: "M3 Expressive 내비게이션 레일: 접으면 너비 96dp, 아이콘 아래에 레이블을 배치한다. 펼치면 너비 220dp, 항목 높이 56dp, 아이콘과 레이블을 8dp 간격으로 가로 배치한다. 기존 상단 앱 바와 맞추어 두 모드의 접힌 상태와 펼친 상태 모두 surfaceContainer 배경을 사용한다. 선택 항목은 secondaryContainer 알약 표시기, onSecondaryContainer 아이콘, 레이블은 secondary를 우선 사용한다. 실제 배경(접힘: surfaceContainer, 펼침: secondaryContainer)과의 대비가 4.5:1 미만이면 각각 onSurface / onSecondaryContainer를 사용한다. 상단 메뉴 버튼으로 펼치기와 접기를 전환한다. 비모달은 콘텐츠 옆에 배치하고 모달은 펼칠 때 스크림과 함께 콘텐츠를 덮어 배경 조작을 차단한다. 스크림을 탭하거나 Escape를 누르면 닫힌다.",
+  vi: "Dọc cạnh trái: ",
+  vi: "Thanh điều hướng bên M3 Expressive: rộng 96dp khi thu gọn, nhãn nằm dưới biểu tượng; khi mở rộng rộng 220dp, các mục cao 56dp, biểu tượng và nhãn nằm ngang với khoảng cách 8dp. Nền surfaceContainer ở mọi trạng thái; mục được chọn có chỉ báo secondaryContainer, biểu tượng onSecondaryContainer, nhãn secondary nếu đạt tương phản 4.5:1, nếu không dùng onSurface. Mục chọn hiển thị đầy đủ; hỗ trợ ModalWideNavigationRail và WideNavigationRail.",
 };
 
 function describeScreen(lines: string[], groups: Group[], frameRect: Rect | null, widths: Record<string, number>, lang: Lang) {
@@ -1350,6 +1356,44 @@ const STYLE_NOTES: Record<Lang, Partial<Record<Kind, string>>> = {
     tabs: "탭: M3 기본 탭. 높이 48dp, 레이블 titleSmall. 선택 탭은 primary 텍스트와 레이블 너비의 3dp 표시기를 사용하고 아래에 outlineVariant 구분선을 둔다.",
     radio: "라디오 버튼: 20dp 원형. 선택 시 primary 테두리와 가운데 점, 미선택 시 onSurfaceVariant 테두리. 그룹에서 하나만 선택되며 레이블은 오른쪽 bodyLarge.",
   },
+  vi: {
+    button: "Nút: mặc định cao 56dp, bo viên thuốc. Kiểu nền đặc dùng primary, kiểu tông màu dùng secondaryContainer, viền dày 1dp outline. Nhóm nút nối nhau cách 3dp, góc bên trong bo 8dp. Kích thước theo M3: XS 32dp, S 40dp, M 56dp, L 96dp, XL 136dp.",
+    iconButton: "Nút biểu tượng: hình tròn 56dp mặc định, hoặc theo các cỡ M3 (32 / 40 / 56 / 96 / 136dp). Sử dụng đúng biến thể nền đặc, tông màu, viền hoặc tiêu chuẩn; nút liên kết sử dụng Connected button group.",
+    carousel: "Băng chuyền: dùng M3 Carousel, các thẻ bo góc 16dp, cách nhau 8dp; lề đầu 16dp. Chế độ duyệt nhiều mục có thẻ đầu lớn hơn; chế độ toàn màn hình hiển thị một thẻ. Cuộn ngang và giữ tiêu đề thẻ gần cạnh dưới.",
+    datePicker: "Bộ chọn ngày M3: chế độ hộp thoại bo góc 28dp có tiêu đề, điều hướng tháng, lưới ngày và nút Hủy / Đồng ý. Chế độ gắn cố định mở lịch dưới ô nhập; chế độ nhập liệu có biểu tượng lịch. Ngày được chọn tô primary.",
+    timePicker: "Bộ chọn giờ M3: hai ô số lớn cho giờ và phút cùng AM/PM. Mặt đồng hồ dùng surfaceContainerHighest với kim primary; chế độ nhập liệu hỗ trợ bàn phím. Có nút Hủy / Đồng ý.",
+    fab: "Nút hành động nổi (FAB): kích thước chuẩn 56dp bo 16dp; lớn 96dp bo 28dp; nhỏ 40dp bo 12dp. Tông màu dùng primaryContainer, nền đặc dùng primary. Cách mép màn hình 16dp và có bóng cấp 3.",
+    extendedFab: "FAB mở rộng: cao 56dp, bo 16dp, biểu tượng bên trái và nhãn bên phải. Hỗ trợ kích thước 56 / 80 / 96dp.",
+    chip: "Thẻ nhỏ (chip): mặc định cao 32dp, bo góc 8dp; kích thước M3 XS 32dp, S 40dp, M 56dp. Khi chọn, dùng secondaryContainer và biểu tượng đánh dấu. Nhóm chip nối nhau cách 3dp; cho phép cuộn ngang.",
+    topAppBar: "Thanh ứng dụng trên: cao 64dp, nền surface, tiêu đề titleLarge, nút biểu tượng 48dp. Chừa vùng status bar; phiên bản vừa/lớn cao 112dp/152dp, tiêu đề nằm dưới hàng biểu tượng và thu gọn khi cuộn.",
+    bottomNav: "Thanh điều hướng dưới: cao 80dp, nền surfaceContainer, chừa vùng điều hướng hệ thống. Mục được chọn có nền chỉ báo secondaryContainer bo viên thuốc 64×32dp, biểu tượng tô kín và nhãn labelMedium.",
+    navRail: "Thanh điều hướng bên: rộng 80dp, kéo dài dọc cạnh trái với nền surfaceContainer. Các mục xếp dọc, mục chọn có chỉ báo secondaryContainer 56×32dp; nội dung hiển thị bên phải.",
+    searchBar: "Thanh tìm kiếm: cao 56dp, bo tròn tối đa, nền surfaceContainerHigh; kiểu viền dùng nền surface và đường viền outline. Biểu tượng tìm kiếm bên trái.",
+    card: "Thẻ: bo góc 20dp. Hình ảnh đặt ở trên, dưới, hai bên hoặc làm nền theo mô tả; giữ đúng tỉ lệ và cắt giữa. Kiểu nền đặc dùng surfaceContainerHighest, kiểu nổi dùng surfaceContainerLow và bóng cấp 1, kiểu viền dùng outlineVariant dày 1dp. Tiêu đề titleMedium, nội dung bodyMedium, đệm 20dp.",
+    listItem: "Mục danh sách: cao 72dp, biểu tượng 24dp, nhãn chính bodyLarge và nhãn phụ bodyMedium màu onSurfaceVariant. Dùng màu nền đã chọn hoặc surfaceContainerLow. Các mục nối dọc cách nhau 3dp.",
+    dialog: "Hộp thoại: rộng 312dp, bo góc 28dp, nền surfaceContainerHigh. Tiêu đề headlineSmall, nội dung bodyMedium, nút chữ căn phải dưới cùng.",
+    snackbar: "Thông báo nhanh: cao 48dp, bo 8dp, nền inverseSurface, chữ inverseOnSurface, nút hành động inversePrimary. Hiển thị cách đáy 16dp và tự ẩn sau vài giây.",
+    textField: "Ô nhập văn bản: dùng thành phần M3 chuẩn, nhãn nổi, ký tự và trạng thái tương ứng; kiểu viền dùng outline, kiểu đặc dùng surfaceContainerHighest.",
+    select: "Menu thả xuống: ô nhập chọn một tùy chọn, mở danh sách theo M3; thể hiện lựa chọn hiện tại và hỗ trợ điều khiển bằng bàn phím.",
+    switch: "Công tắc: đường nền 52×32dp theo M3. Bật dùng primary; tắt dùng surfaceContainerHighest với viền outline. Nhãn bên trái, công tắc bên phải.",
+    checkbox: "Ô đánh dấu: vuông 18dp, bo 2dp, màu primary khi chọn, nhãn bodyLarge bên phải.",
+    slider: "Thanh trượt: đường dày 16dp kiểu M3 Expressive, tay nắm 4×44dp. Phần đã chọn primary, phần còn lại secondaryContainer; kéo để đổi giá trị.",
+    text: "Văn bản: dùng cỡ sp đã đặt; tiêu đề dùng onSurface, mô tả dùng onSurfaceVariant; chiều cao dòng 1,3–1,5 lần cỡ chữ. Không có phản hồi chạm.",
+    image: "Hình ảnh: bo góc 20dp, sử dụng ảnh giữ đúng tỉ lệ và cắt giữa; khi thiếu ảnh hiển thị vùng giữ chỗ màu surfaceContainerHighest.",
+    camera: "Xem trước camera: bo góc 20dp, hiển thị camera thiết bị. Khi chưa cấp quyền, hiển thị biểu tượng camera trên nền inverseSurface.",
+    map: "Bản đồ: bo góc 20dp, nhúng SDK bản đồ; khi tải hiển thị biểu tượng trên nền surfaceContainerHighest.",
+    divider: "Đường phân cách: dày 1dp màu outlineVariant, thụt hai bên 16dp.",
+    box: "Vùng chứa: khối nền đơn giản với màu và bán kính bo góc đã chọn. Không có hành vi riêng, có thể chứa các phần tử xếp lớp.",
+    bottomSheet: "Bảng dưới: lớp phủ mở từ mép dưới, có tay nắm kéo căn giữa phía trên, màu nền và bo góc trên đã chọn; góc dưới vuông.",
+    loadingIndicator: "Chỉ báo tải: sử dụng M3 Expressive LoadingIndicator có hiệu ứng biến đổi hình dạng; có thể nằm trong vùng tròn secondaryContainer.",
+    linearProgress: "Thanh tiến trình ngang: độ dày mặc định 4dp hoặc theo thiết lập, hai đầu tròn. Nếu chọn dạng sóng, dùng M3 Expressive wavy; đường nền secondaryContainer, phần tiến trình primary.",
+    circularProgress: "Vòng tiến trình: độ dày mặc định 4dp hoặc theo thiết lập, đầu tròn; hỗ trợ dạng sóng M3 Expressive.",
+    splitButton: "Nút tách: hành động chính ở bên trái, mũi tên mở menu ở bên phải, chia sẻ chiều cao và bán kính bo góc.",
+    fabMenu: "Menu FAB: khi chạm mở danh sách hành động nổi bên trên nút chính, biểu tượng chính chuyển thành đóng.",
+    toolbar: "Thanh công cụ: hàng các biểu tượng hành động, kích thước theo Material 3, phân nhóm theo chức năng.",
+    tabs: "Thẻ điều hướng: cao 48dp, nhãn titleSmall. Thẻ đang chọn dùng màu primary và vạch chỉ báo 3dp bo góc trên, phía dưới có đường phân cách outlineVariant.",
+    radio: "Nút chọn một: đường tròn 20dp, khi chọn có viền primary và chấm ở giữa; chỉ chọn một mục trong nhóm. Nhãn bodyLarge ở bên phải.",
+  },
 };
 
 /* ---------- theme: shape, type, motion ---------- */
@@ -1359,6 +1403,7 @@ const FONT_NOTE: Record<Lang, (name: string) => string> = {
   en: (n) => `Use ${n} as the typeface.`,
   zh: (n) => `字体使用 ${n}。`,
   ko: (n) => `사용할 글꼴: ${n}.`,
+  vi: (n) => `Dùng phông chữ ${n}.`,
 };
 
 const THEME_NOTES: Record<Lang, { shape: Record<Theme["shape"], string>; emphasized: string; plainType: string; motion: Record<Theme["motion"], string> }> = {
@@ -1412,6 +1457,19 @@ const THEME_NOTES: Record<Lang, { shape: Record<Theme["shape"], string>; emphasi
     motion: {
       standard: "모션은 MotionScheme.standard()를 사용한다. 화면 전환과 상태 변화는 튀지 않고 부드럽게 처리한다.",
       expressive: "모션은 MotionScheme.expressive()를 사용한다. 화면 전환과 상태 변화에 가볍게 튀는 스프링 효과를 적용한다.",
+    },
+  },
+  vi: {
+    shape: {
+      square: "Giảm bo góc trên toàn bộ thành phần M3: nút/chip 8–12dp, thẻ và ảnh 8dp, hộp thoại khoảng 12dp, không dùng dạng viên thuốc.",
+      rounded: "Dùng bán kính bo góc M3 Expressive tiêu chuẩn: nút dạng viên thuốc, thẻ 20dp, hộp thoại 28dp.",
+      full: "Bo tròn tối đa: nút, chip và ô nhập dạng viên thuốc; thẻ/ảnh 32dp, hộp thoại/bảng dưới khoảng 40dp.",
+    },
+    emphasized: "Dùng kiểu chữ nhấn mạnh M3 Expressive cho tiêu đề, nhãn nút và thẻ (ví dụ headlineMediumEmphasized).",
+    plainType: "Dùng độ đậm chữ chuẩn của M3.",
+    motion: {
+      standard: "Dùng MotionScheme.standard(): chuyển màn hình và trạng thái mượt mà, không nảy.",
+      expressive: "Dùng MotionScheme.expressive(): chuyển động có hiệu ứng lò xo nảy nhẹ.",
     },
   },
 };
@@ -1478,6 +1536,19 @@ const GENERAL: Record<Lang, (string | ((pl: Platform) => string))[]> = {
     "탭 가능한 부품에는 리플과 약한 축소 피드백을 준다. '뒤로'는 진입 전환을 반대로 재생하고 시스템 뒤로 제스처나 버튼도 같은 동작을 수행한다.",
     "아이콘은 Material Symbols Rounded를 사용한다.",
   ],
+  vi: [
+    "Dựa vào mục đích các màn hình để xác định loại ứng dụng, triển khai đầy đủ các tính năng thường có (tạo, danh sách, chi tiết, chỉnh sửa, xóa, tìm kiếm, cài đặt) dù bản phác thảo chưa thể hiện.",
+    (pl: Platform) => `Xử lý dữ liệu thật: lưu dữ liệu người dùng tạo ${pl === "web" ? "trong trình duyệt (IndexedDB hoặc tương đương)" : "trên thiết bị (Room, DataStore hoặc tương đương)"} để tồn tại sau khi tải lại hoặc khởi động. Không dùng dữ liệu giả. Hiển thị trạng thái trống khi chưa có dữ liệu. Kiểm tra đầu vào và thông báo, xác nhận hợp lý khi lỗi hoặc xóa.`,
+    "Suy ra hành vi chưa mô tả dựa trên mục đích màn hình và nhãn thành phần. Nút không có mô tả vẫn phải thực hiện chức năng phù hợp như lưu, gửi hoặc mở chi tiết.",
+    "Giữ đúng thứ tự, cách nhóm và vị trí tương đối của bố cục; có thể điều chỉnh kích thước và khoảng cách để đảm bảo hiển thị tốt trên thiết bị thật.",
+    (pl: Platform) => `Ưu tiên thành phần tiêu chuẩn của ${pl === "web" ? "Material Web" : "Jetpack Compose material3 (bao gồm API Expressive mới nhất)"}, không tự vẽ lại các thành phần đã có.`,
+    "Tham chiếu màu qua vai trò của bảng màu Material 3 (primary, surfaceContainer, v.v.), không viết cố định mã màu.",
+    "Chừa lề màn hình 16dp, khoảng cách giữa các thành phần 8–16dp, dùng kiểu chữ M3 như titleLarge và bodyMedium.",
+    "Các thành phần được mô tả cùng một hàng phải nằm trong đúng một Row ngang, không xếp dọc hoặc xuống dòng. Căn giữa dọc các thành phần thấp hơn.",
+    "Các thành phần được mô tả chồng trong vùng chứa phải dùng Box với vùng chứa làm nền; không tự ý tách hoặc đổi thứ tự lớp. Thành phần mô tả sau nằm phía trước.",
+    "Phần tử có thể chạm cần hiệu ứng gợn sóng và thu nhỏ nhẹ. Hành động Quay lại phải đảo ngược chuyển cảnh trước đó, kể cả thao tác hệ thống.",
+    "Dùng biểu tượng Material Symbols Rounded.",
+  ],
 };
 
 /** notes that differ on the web, where a browser has no status bar or gesture area to inset for */
@@ -1498,6 +1569,10 @@ const STYLE_NOTES_WEB: Record<Lang, Partial<Record<Kind, string>>> = {
     topAppBar: "顶部应用栏：高 64dp，背景为 surface。标题用 titleLarge，左右图标按钮 48dp。滚动时变为 surfaceContainer 的标准行为即可。",
     bottomNav: "导航栏：高 80dp，背景为 surfaceContainer。选中项用 secondaryContainer 的胶囊指示器（宽 64dp、高 32dp）表示，图标为填充样式，标签用 labelMedium。",
   },
+  vi: {
+    topAppBar: "Thanh ứng dụng trên: cao 64dp, nền surface. Tiêu đề dùng titleLarge, nút biểu tượng hai bên 48dp; cuộn có thể đổi nền sang surfaceContainer.",
+    bottomNav: "Thanh điều hướng dưới: cao 80dp, nền surfaceContainer. Mục chọn có chỉ báo secondaryContainer bo viên thuốc 64×32dp, biểu tượng đặc và nhãn labelMedium.",
+  },
 };
 
 /* ---------- fixed phrases ---------- */
@@ -1513,7 +1588,7 @@ const viewportOf = (frames: Frame[], phone: boolean): Viewport => {
 const sizeLabel = (f: Frame, vp: Viewport, lang: Lang): string | undefined => {
   if (vp !== "mixed") return undefined;
   const { w, h } = frameSizeOf(f);
-  const kind = isPhoneFrame(f) ? { ja: "スマホ", en: "phone", zh: "手机", ko: "휴대전화" } : { ja: "デスクトップ", en: "desktop", zh: "桌面", ko: "데스크톱" };
+  const kind = isPhoneFrame(f) ? { ja: "スマホ", en: "phone", zh: "手机", ko: "휴대전화", vi: "điện thoại" } : { ja: "デスクトップ", en: "desktop", zh: "桌面", ko: "데스크톱", vi: "máy tính" };
   return `${kind[lang]} ${w}×${h}`;
 };
 
@@ -1679,6 +1754,33 @@ const PH = {
     styleIntro: "사용된 부품별 지침입니다. 수치는 M3 Expressive 기본값이며 표준 컴포넌트가 제공하는 동작은 그대로 사용하고 내용에 맞게 조정할 수 있습니다.",
     hGeneral: "## 전체 지침",
   },
+  vi: {
+    screen: "màn hình",
+    intro: (title: string, brief: string) => `Hãy triển khai ${title} bằng ngôn ngữ thiết kế Material 3 Expressive.${brief ? ` ${trimEnd(brief)}.` : ""}`,
+    titleOnly: (name: string) => `màn hình ${name}`,
+    titleAll: (n: number) => (n > 1 ? "ứng dụng này" : "màn hình này"),
+    target: (vp: Viewport, pl: Platform, dark: boolean, both: boolean) =>
+      `${vp === "phone" ? "Thiết kế cho điện thoại dọc (412×892dp)" : vp === "desktop" ? `Thiết kế cho ${pl === "web" ? "trình duyệt máy tính" : "máy tính bảng ngang"} (1280×800)` : vp === "mixed" ? "Hỗ trợ cả điện thoại dọc (412×892) và màn hình rộng (1280×800), responsive cho hai kích thước" : "Bố cục tự do"}, ${both ? "hỗ trợ sáng và tối theo hệ thống" : `chỉ sử dụng chế độ ${dark ? "tối" : "sáng"}`}.`,
+    platform: (pl: Platform) => pl === "web" ? "Xây dựng ứng dụng web chạy trong trình duyệt." : "Xây dựng ứng dụng Android gốc.",
+    schemeHead: (dark: boolean) => dark ? "Bảng màu tối:" : "Bảng màu sáng:",
+    sketch: "Bố cục bên dưới chỉ là bản phác thảo thể hiện ý tưởng, không phải đặc tả hoàn chỉnh. Hãy tạo ứng dụng hoàn chỉnh, có thể sử dụng thực tế, không chỉ sao chép một hình tĩnh.",
+    hColor: "## Màu sắc",
+    dynamic: (pl: Platform) => pl === "web" ? "Dùng màu động nếu trình duyệt hoặc hệ điều hành cung cấp màu nhấn, tạo bảng màu Material 3 từ màu đó; nếu không có, dùng màu dự phòng bên dưới." : "Dùng màu động từ hình nền trên Android 12+ (dynamicLightColorScheme / dynamicDarkColorScheme); nếu không khả dụng, dùng màu dự phòng bên dưới.",
+    colorIntro: (label: string, fallback: boolean, th: Theme) => `Bảng màu ${fallback ? "dự phòng" : "chính"} thuộc tông ${label}. Cấu hình Material 3 cho chế độ ${th.bothModes ? "sáng và tối" : th.dark ? "tối" : "sáng"}${th.contrast === "high" ? " (tương phản cao)" : th.contrast === "medium" ? " (tương phản trung bình)" : ""} bằng các vai trò màu sau; tất cả màu UI phải tham chiếu qua vai trò.`,
+    hTheme: "## Hình dạng, kiểu chữ và chuyển động",
+    hLayout: "## Bố cục",
+    empty: "Màn hình chưa có thành phần nào.",
+    screens: (names: string[]) => `Có ${names.length} màn hình: ${names.join(", ")}.`,
+    placement: (place: Place) => place === "center" ? "Các thành phần nằm ở giữa màn hình theo chiều dọc." : place === "bottom" ? "Các thành phần nằm gần đáy màn hình, phía trên thanh điều hướng." : "Các thành phần phân bố đều theo chiều cao màn hình.",
+    scrolls: (length: number, view: number) => `Chiều cao nội dung là ${length}dp, lớn hơn vùng hiển thị ${view}dp, do đó cần cuộn dọc. Thanh điều hướng và nút nổi vẫn cố định.`,
+    screenHead: (name: string, bg: string | undefined, has: boolean, size?: string) => `Màn hình ${name}${size || bg ? ` (${[size, bg ? `nền ${bg}` : ""].filter(Boolean).join(", ")})` : ""}: ${has ? "các thành phần từ trên xuống dưới (có ghi chú khi chồng lớp):" : "chưa có nội dung."}`,
+    loose: "Các thành phần ngoài màn hình (dùng chung hoặc tham khảo):",
+    freeform: "Mô tả màn hình từ trên xuống dưới:",
+    hBehavior: "## Hành vi và điều hướng",
+    hStyle: "## Kiểu thành phần",
+    styleIntro: "Hướng dẫn dành cho các thành phần đang dùng. Thông số lấy theo mặc định M3 Expressive và có thể điều chỉnh để phù hợp nội dung.",
+    hGeneral: "## Hướng dẫn chung",
+  },
 };
 
 /** The lines an author may add to the general guidance with one tap: each is a short choice in
@@ -1717,6 +1819,13 @@ export const PROMPT_OPTION_TEXT: Record<Lang, Record<PromptOption, { label: stri
     darkMode: { label: "다크 모드 지원", icon: "dark_mode", line: "라이트와 다크 색상 스킴을 모두 지원하고 시스템 설정을 따른다." },
     languages: { label: "일본어와 영어", icon: "translate", line: "UI 문구를 일본어와 영어로 모두 준비하고 기기 언어 설정을 따른다." },
     offline: { label: "오프라인 지원", icon: "cloud_off", line: "네트워크가 없어도 주요 기능을 쓸 수 있게 하고, 필요하면 재연결 시 동기화한다." },
+  },
+  vi: {
+    deliverable: { label: "Chỉ bàn giao sản phẩm, không cần xác minh", icon: "package_2", line: (pl) => `Không cần kiểm thử thủ công trên ${pl === "web" ? "trình duyệt" : "thiết bị/emulator"}. Khi triển khai xong, ${pl === "web" ? "chạy production build và bàn giao kết quả" : "xuất bản APK release đã ký"}.` },
+    tests: { label: "Viết kiểm thử", icon: "science", line: "Viết unit test cho logic chính và chỉ bàn giao khi tất cả kiểm thử đạt." },
+    darkMode: { label: "Hỗ trợ giao diện tối", icon: "dark_mode", line: "Hỗ trợ bảng màu sáng và tối, tự đổi theo cài đặt hệ thống." },
+    languages: { label: "Tiếng Việt và tiếng Anh", icon: "translate", line: "Chuẩn bị nội dung giao diện bằng tiếng Việt và tiếng Anh, tự chọn theo ngôn ngữ thiết bị." },
+    offline: { label: "Hoạt động ngoại tuyến", icon: "cloud_off", line: "Cho phép dùng các chức năng chính khi không có mạng và đồng bộ lại khi kết nối được khôi phục." },
   },
 };
 
