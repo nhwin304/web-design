@@ -58,10 +58,14 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         shell: bash
         run: |
+          # README.md is intentionally customized for this fork, so do not
+          # apply upstream README changes over the local project description.
+          # All other upstream changes must still pass the conflict check.
           git -C upstream diff --binary \
             "${{ steps.check.outputs.current_sha }}" \
             "${{ steps.check.outputs.upstream_sha }}" \
-            -- . ':(exclude).github/workflows/**' > upstream.patch
+            -- . ':(exclude).github/workflows/**' \
+                 ':(top,exclude)README.md' > upstream.patch
 
       - name: Apply upstream patch
         if: steps.check.outputs.changed == 'true'
