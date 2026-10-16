@@ -10,14 +10,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lnkiai/m3e-canvas/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/lnkiai/m3e-canvas?style=for-the-badge&logo=github&logoColor=white&color=6750A4&labelColor=1D1B20" /></a>
-  <a href="https://github.com/lnkiai/m3e-canvas/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/lnkiai/m3e-canvas?style=for-the-badge&logo=github&logoColor=white&color=625B71&labelColor=1D1B20" /></a>
-  <a href="https://github.com/sponsors/lnkiai"><img alt="Sponsors" src="https://img.shields.io/github/sponsors/lnkiai?style=for-the-badge&logo=githubsponsors&logoColor=white&color=7D5260&labelColor=1D1B20" /></a>
-  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-625B71?style=for-the-badge&labelColor=1D1B20" /></a>
+  <a href="https://github.com/lnkiai/m3e-canvas/stargazers"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/github/stars/lnkiai/m3e-canvas?style=flat-square&logo=github&logoColor=white&color=6750A4&labelColor=1D1B20" /><img alt="GitHub stars" src="https://img.shields.io/github/stars/lnkiai/m3e-canvas?style=for-the-badge&logo=github&logoColor=white&color=6750A4&labelColor=1D1B20" /></picture></a>
+  <a href="https://github.com/sponsors/lnkiai"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/github/sponsors/lnkiai?style=flat-square&logo=githubsponsors&logoColor=white&color=7D5260&labelColor=1D1B20" /><img alt="Sponsors" src="https://img.shields.io/github/sponsors/lnkiai?style=for-the-badge&logo=githubsponsors&logoColor=white&color=7D5260&labelColor=1D1B20" /></picture></a>
+  <a href="LICENSE"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/badge/license-MIT-625B71?style=flat-square&labelColor=1D1B20" /><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-625B71?style=for-the-badge&labelColor=1D1B20" /></picture></a>
   <br />
-  <a href="https://m3.material.io/"><img alt="Material 3 Expressive" src="https://img.shields.io/badge/Material_3-Expressive-6750A4?style=for-the-badge&logo=materialdesign&logoColor=white&labelColor=1D1B20" /></a>
-  <a href="https://nextjs.org/"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-625B71?style=for-the-badge&logo=nextdotjs&logoColor=white&labelColor=1D1B20" /></a>
-  <a href="https://react.dev/"><img alt="React 19" src="https://img.shields.io/badge/React-19-625B71?style=for-the-badge&logo=react&logoColor=61DAFB&labelColor=1D1B20" /></a>
+  <a href="https://m3.material.io/"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/badge/Material_3-Expressive-6750A4?style=flat-square&logo=materialdesign&logoColor=white&labelColor=1D1B20" /><img alt="Material 3 Expressive" src="https://img.shields.io/badge/Material_3-Expressive-6750A4?style=for-the-badge&logo=materialdesign&logoColor=white&labelColor=1D1B20" /></picture></a>
+  <a href="https://nextjs.org/"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/badge/Next.js-16-625B71?style=flat-square&logo=nextdotjs&logoColor=white&labelColor=1D1B20" /><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-625B71?style=for-the-badge&logo=nextdotjs&logoColor=white&labelColor=1D1B20" /></picture></a>
+  <a href="https://react.dev/"><picture><source media="(max-width: 767px)" srcset="https://img.shields.io/badge/React-19-625B71?style=flat-square&logo=react&logoColor=61DAFB&labelColor=1D1B20" /><img alt="React 19" src="https://img.shields.io/badge/React-19-625B71?style=for-the-badge&logo=react&logoColor=61DAFB&labelColor=1D1B20" /></picture></a>
 </p>
 
 <p align="center">
@@ -28,7 +27,7 @@
 
 <p align="center"><img src="docs/readme/demo.gif" alt="M3E Canvas에서 레시피 앱 Pantry를 만들고, 화면을 탭해 보고, 프롬프트를 복사해 터미널의 Claude Code가 앱을 만들고, 완성된 앱이 휴대전화에서 실행되기까지" /></p>
 
-<p align="center"><sub>화면을 만들고, 흐름을 탭해 보고, 프롬프트를 복사해 AI 코딩 도구가 앱을 만들게 합니다. (<a href="docs/readme/demo.mp4">mp4</a>)</sub></p>
+<p align="center">화면을 만들고, 흐름을 탭해 보고, 프롬프트를 복사해 AI 코딩 도구가 앱을 만들게 합니다. (<a href="docs/readme/demo.mp4">mp4</a>)</p>
 
 M3E Canvas는 진짜 Material 3 Expressive 부품으로 앱 화면을 그리는 무료 오픈소스 스케치 도구입니다. 브라우저에서만 동작하며 계정도, 서버도, 설치도 필요 없습니다. 그린 화면은 정확한 프롬프트가 되어, Claude Code, Codex, Gemini CLI, Cursor 등 프롬프트를 받을 수 있는 AI 코딩 도구라면 무엇이든 동작하는 앱으로 만들 수 있습니다.
 
@@ -36,47 +35,29 @@ M3E Canvas는 진짜 Material 3 Expressive 부품으로 앱 화면을 그리는 
 
 ## <img src="docs/readme/ui/icon-how.png" width="32" height="32" align="absmiddle" alt="" /> 사용 방법
 
-<table>
-  <tr>
-    <td width="33%" valign="top"><img src="docs/readme/step-1-sketch.png" alt="부품 패널과 휴대전화 화면" /></td>
-    <td width="33%" valign="top"><img src="docs/readme/step-2-preview.png" alt="미리보기에서 연 화면" /></td>
-    <td width="33%" valign="top"><img src="docs/readme/step-3-prompt.png" alt="화면 옆의 프롬프트 패널" /></td>
-  </tr>
-  <tr>
-    <td valign="top"><b>스케치</b><br />부품을 휴대전화나 데스크톱 화면으로 드래그합니다. 부품끼리 붙고 4dp 그리드에 맞춰집니다.</td>
-    <td valign="top"><b>탭해 보기</b><br />부품을 화면에 연결하고 미리보기를 누르면 전환 효과까지 포함해 흐름을 시험할 수 있습니다.</td>
-    <td valign="top"><b>프롬프트 복사</b><br />디자인 전체가 선택한 언어의 짧은 지시문이 됩니다. AI 코딩 도구에 붙여 넣으면 됩니다.</td>
-  </tr>
-</table>
+<picture>
+  <source media="(max-width: 767px)" srcset="docs/readme/cards/how-narrow.png" />
+  <img src="docs/readme/cards/how-wide.png" alt="세 단계: 부품 패널로 화면을 만들고, 미리보기에서 탭해 보고, 프롬프트를 복사합니다" />
+</picture>
+
+1. **스케치** — 부품을 휴대전화나 데스크톱 화면으로 드래그합니다. 부품끼리 붙고 4dp 그리드에 맞춰집니다.
+2. **탭해 보기** — 부품을 화면에 연결하고 미리보기를 누르면 전환 효과까지 포함해 흐름을 시험할 수 있습니다.
+3. **프롬프트 복사** — 디자인 전체가 선택한 언어의 짧은 지시문이 됩니다. AI 코딩 도구에 붙여 넣으면 됩니다.
 
 ## <img src="docs/readme/ui/icon-features.png" width="32" height="32" align="absmiddle" alt="" /> 주요 기능
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="docs/readme/feature-parts.png" alt="캔버스에서 버튼을 선택하고 패널을 연 모습" />
-      <h3>진짜 M3 Expressive 부품</h3>
-      버튼, FAB, 바, 탭, 카드, 목록, 시트, 선택기, 캐러셀, 로딩 표시기 등. 부품마다 텍스트, 스타일, 크기, 탭했을 때의 동작을 정하는 패널이 있습니다.
-    </td>
-    <td width="50%" valign="top">
-      <img src="docs/readme/feature-flow.png" alt="화살표로 연결된 휴대전화 화면 세 개" />
-      <h3>화면과 흐름</h3>
-      휴대전화와 데스크톱 화면, 스크롤되는 긴 화면, 탭이나 스와이프로 원하는 전환 효과와 함께 다른 화면 열기. 전체 흐름은 화살표로 보입니다.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="docs/readme/feature-theme.png" alt="색상 패널에서 스케치를 Teal 팔레트로 바꾼 모습" />
-      <h3>테마를 한곳에서</h3>
-      색상, 모양, 글꼴, 모션. 7가지 팔레트 또는 나만의 기준 색상, 라이트와 다크, 3단계 대비, 모서리 스타일, 글꼴, 익스프레시브 스프링 모션.
-    </td>
-    <td width="50%" valign="top">
-      <img src="docs/readme/feature-ai.png" alt="아이디어를 입력한 'AI에게 맡기기' 대화상자" />
-      <h3>선택형 AI 도움</h3>
-      자신의 키로 디자인 초안이나 설명을 쓰게 하거나, 코딩 에이전트용 지시를 복사해 공유 링크로 답을 받을 수 있습니다. 키는 브라우저 밖으로 나가지 않습니다.
-    </td>
-  </tr>
-</table>
+<picture>
+  <source media="(max-width: 767px)" srcset="docs/readme/cards/features-narrow.png" />
+  <img src="docs/readme/cards/features-wide.png" alt="네 가지 기능: 부품별 패널, 연결된 화면, 색상 패널, 'AI에게 맡기기' 대화상자" />
+</picture>
+
+<img src="docs/readme/ui/feature-parts.png" width="24" height="24" align="absmiddle" alt="" /> **진짜 M3 Expressive 부품** — 버튼, FAB, 바, 탭, 카드, 목록, 시트, 선택기, 캐러셀, 로딩 표시기 등. 부품마다 텍스트, 스타일, 크기, 탭했을 때의 동작을 정하는 패널이 있습니다.
+
+<img src="docs/readme/ui/feature-flow.png" width="24" height="24" align="absmiddle" alt="" /> **화면과 흐름** — 휴대전화와 데스크톱 화면, 스크롤되는 긴 화면, 탭이나 스와이프로 원하는 전환 효과와 함께 다른 화면 열기. 전체 흐름은 화살표로 보입니다.
+
+<img src="docs/readme/ui/feature-theme.png" width="24" height="24" align="absmiddle" alt="" /> **테마를 한곳에서** — 색상, 모양, 글꼴, 모션. 7가지 팔레트 또는 나만의 기준 색상, 라이트와 다크, 3단계 대비, 모서리 스타일, 글꼴, 익스프레시브 스프링 모션.
+
+<img src="docs/readme/ui/feature-ai.png" width="24" height="24" align="absmiddle" alt="" /> **선택형 AI 도움** — 자신의 키로 디자인 초안이나 설명을 쓰게 하거나, 코딩 에이전트용 지시를 복사해 공유 링크로 답을 받을 수 있습니다. 키는 브라우저 밖으로 나가지 않습니다.
 
 <details>
 <summary><b>할 수 있는 모든 것</b></summary>
