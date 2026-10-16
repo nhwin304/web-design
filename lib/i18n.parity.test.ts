@@ -4,9 +4,11 @@ import {
   SWIPE_TEXT, TAB_LABELS, TRANSITION_TEXT, UI, t, type UIKey,
 } from "./i18n";
 import { KIND_ORDER, LANG_FONT, SWIPE_DIRS, TRANSITIONS } from "./tokens";
+import { VI } from "./vi";
 
 const ui: Record<UIKey, Record<string, string>> = UI;
 const ko: Record<UIKey, string> = KO;
+const vi: Record<UIKey, string> = VI;
 const keys = Object.keys(ui) as UIKey[];
 const languages = LANGS.map(({ key }) => key);
 const sortedKeys = (value: object) => Object.keys(value).sort();
@@ -32,23 +34,24 @@ function leafPaths(value: unknown, prefix = ""): string[] {
 
 describe("UI dictionary parity", () => {
   it("offers each supported language exactly once with a nonblank display label", () => {
-    expect([...languages].sort()).toEqual(["en", "ja", "ko", "zh"]);
+    expect([...languages].sort()).toEqual(["en", "ja", "ko", "vi", "zh"]);
     for (const { key, label } of LANGS) nonemptyStrings(label, `LANGS.${key}`);
   });
 
-  it("gives Korean exactly the same keys as the main UI dictionary", () => {
+  it("gives Korean and Vietnamese exactly the same keys as the main UI dictionary", () => {
     expect(keys.length).toBeGreaterThan(0);
     expect(sortedKeys(ko)).toEqual([...keys].sort());
+    expect(sortedKeys(vi)).toEqual([...keys].sort());
   });
 
   it("gives every main UI key all and only the non-Korean languages", () => {
-    const expected = languages.filter((lang) => lang !== "ko").sort();
+    const expected = languages.filter((lang) => lang !== "ko" && lang !== "vi").sort();
     for (const key of keys) expect(sortedKeys(ui[key]), key).toEqual(expected);
   });
 
   it.each(LANGS)("returns a nonblank translation for every UI key in $key", ({ key: lang }) => {
     for (const key of keys) {
-      const stored = lang === "ko" ? ko[key] : ui[key][lang];
+      const stored = lang === "ko" ? ko[key] : lang === "vi" ? vi[key] : ui[key][lang];
       nonemptyStrings(stored, `UI.${key}.${lang}`);
       expect(t(key, lang), `${key}.${lang}`).toBe(stored);
     }
@@ -103,8 +106,9 @@ describe("LANG_FONT coverage", () => {
     expect(sortedKeys(LANG_FONT)).toEqual([...languages].sort());
   });
 
-  it("deliberately requires no extra font for English", () => {
+  it("deliberately requires no extra font for English and Vietnamese", () => {
     expect(LANG_FONT.en).toBeNull();
+    expect(LANG_FONT.vi).toBeNull();
   });
 
   it.each([
