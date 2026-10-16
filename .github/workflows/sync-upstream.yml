@@ -6,6 +6,9 @@ on:
     - cron: "17 * * * *"
   workflow_dispatch:
   push:
+    # A branch update must never sync or push changes directly to main.
+    branches:
+      - main
     paths:
       - .github/workflows/sync-upstream.yml
 
@@ -19,6 +22,8 @@ concurrency:
 
 jobs:
   sync:
+    # Defense in depth: only main may perform a write-enabled upstream sync.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout web-design
