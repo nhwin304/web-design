@@ -4,17 +4,20 @@ import { Lang, setGlobalLang } from "./i18n";
 import { buildPrompt } from "./prompt";
 import { BACK_TARGET, DEFAULT_THEME, Doc, Item, Platform, defaultTabs, makeItem, paletteOf } from "./tokens";
 
-const LANGS: Lang[] = ["ja", "en", "zh", "ko"];
+// Existing golden-output assertions cover the four original prompt languages;
+// Vietnamese has a separate smoke test for translated prompt sections.
+type LegacyLang = Exclude<Lang, "vi">;
+const LANGS: LegacyLang[] = ["ja", "en", "zh", "ko"];
 
 /* Section headings in the order buildPrompt must emit them. */
-const SECTIONS: Record<Lang, string[]> = {
+const SECTIONS: Record<LegacyLang, string[]> = {
   ja: ["## カラー", "## 形・文字・動き", "## 画面構成", "## 振る舞いと画面遷移", "## 各部品のスタイル", "## 全体の指針"],
   en: ["## Colors", "## Shape, type and motion", "## Layout", "## Behavior and navigation", "## Component styles", "## General guidance"],
   zh: ["## 配色", "## 形状、字体与动效", "## 屏幕结构", "## 行为与屏幕跳转", "## 各组件的样式", "## 整体原则"],
   ko: ["## 색상", "## 모양, 글꼴 및 모션", "## 화면 구성", "## 동작 및 화면 전환", "## 부품별 스타일", "## 전체 지침"],
 };
 
-const PLATFORM_LINE: Record<Lang, Record<Platform, string>> = {
+const PLATFORM_LINE: Record<LegacyLang, Record<Platform, string>> = {
   ja: { android: "実装先は Android（ネイティブアプリ）です。", web: "実装先は Web（ブラウザで動くアプリ）です。" },
   en: { android: "Build it for Android, as a native app.", web: "Build it for the web, as an app that runs in the browser." },
   zh: { android: "实现目标是 Android（原生应用）。", web: "实现目标是 Web（在浏览器中运行的应用）。" },
@@ -46,7 +49,7 @@ function fixture(platform: Platform = "android", extraItems: Item[] = []): Doc {
 
 /* Set the module-level language for the fixture helpers, then build explicitly
  * in that language — nothing is left to ambient state. */
-function build(lang: Lang, platform: Platform = "android", extraItems: Item[] = []) {
+function build(lang: LegacyLang, platform: Platform = "android", extraItems: Item[] = []) {
   setGlobalLang(lang);
   return buildPrompt(fixture(platform, extraItems), {}, undefined, lang);
 }
@@ -54,14 +57,14 @@ function build(lang: Lang, platform: Platform = "android", extraItems: Item[] = 
 const lines = (prompt: string) => prompt.split("\n");
 const headings = (prompt: string) => lines(prompt).filter((l) => l.startsWith("## "));
 /* bullet lines between the style heading and the closing guidance heading */
-function styleBullets(prompt: string, lang: Lang) {
+function styleBullets(prompt: string, lang: LegacyLang) {
   const ls = lines(prompt);
   const style = ls.indexOf(SECTIONS[lang][4]);
   const general = ls.indexOf(SECTIONS[lang][5]);
   return ls.slice(style + 1, general).filter((l) => l.startsWith("- "));
 }
 
-const QUOTED: Record<Lang, { label: string; others: string[] }> = {
+const QUOTED: Record<LegacyLang, { label: string; others: string[] }> = {
   ja: { label: "「Save」", others: ['"Save"', "“Save”"] },
   en: { label: '"Save"', others: ["「Save」", "“Save”"] },
   zh: { label: "“Save”", others: ["「Save」", '"Save"'] },
@@ -94,13 +97,13 @@ describe("card image placement", () => {
   afterEach(() => setGlobalLang("ja"));
 
   /* the phrase the layout section must carry for each placement */
-  const PLACEMENT: Record<Lang, Record<string, string>> = {
+  const PLACEMENT: Record<LegacyLang, Record<string, string>> = {
     ja: { top: "上部に", bottom: "下部に", leading: "先頭側（全高）に", trailing: "末尾側（全高）に", background: "背景全面に" },
     en: { top: "on top", bottom: "along the bottom", leading: "filling the leading side", trailing: "filling the trailing side", background: "as a full-bleed background" },
     zh: { top: "顶部是", bottom: "底部是", leading: "左侧（全高）是", trailing: "右侧（全高）是", background: "整张卡片的背景是" },
     ko: { top: "위쪽에", bottom: "아래쪽에", leading: "앞쪽(전체 높이)에", trailing: "뒤쪽(전체 높이)에", background: "배경 전체에" },
   };
-  const SIZED: Record<Lang, { top: string; side: string }> = {
+  const SIZED: Record<LegacyLang, { top: string; side: string }> = {
     ja: { top: "（高さ 96dp）", side: "（幅 96dp）" },
     en: { top: "(96dp tall)", side: "(96dp wide)" },
     zh: { top: "（高 96dp）", side: "（宽 96dp）" },
@@ -108,7 +111,7 @@ describe("card image placement", () => {
   };
   /* the screen-layout section alone — the card's own style note also names the placements —
    * for a card standing in its own group so its full sentence is written out */
-  function cardLayout(lang: Lang, patch: Partial<Item>) {
+  function cardLayout(lang: LegacyLang, patch: Partial<Item>) {
     setGlobalLang(lang);
     const doc = fixture();
     doc.groups = [{ id: "g-card", x: 16, y: 100, axis: "x", items: [{ ...makeItem("card"), ...patch }] }];
@@ -131,13 +134,13 @@ describe("card image placement", () => {
   });
 
   it.each(LANGS)("mentions a text position or color only when it differs from the automatic one in %s", (lang) => {
-    const color: Record<Lang, string> = { ja: "文字色 primary", en: "text in primary", zh: "文字颜色 primary", ko: "텍스트 색상 primary" };
-    const bottom: Record<Lang, string> = { ja: "文字は下寄せ", en: "text aligned to the bottom", zh: "文字底部对齐", ko: "텍스트 아래 정렬" };
+    const color: Record<LegacyLang, string> = { ja: "文字色 primary", en: "text in primary", zh: "文字颜色 primary", ko: "텍스트 색상 primary" };
+    const bottom: Record<LegacyLang, string> = { ja: "文字は下寄せ", en: "text aligned to the bottom", zh: "文字底部对齐", ko: "텍스트 아래 정렬" };
     expect(cardLayout(lang, {})).not.toContain(color[lang]);
     expect(cardLayout(lang, { textColor: "primary" })).toContain(color[lang]);
     expect(cardLayout(lang, { contentAlign: "end" })).toContain(bottom[lang]);
     expect(cardLayout(lang, { imagePos: "background", contentAlign: "end" })).not.toContain(bottom[lang]);
-    const centred: Record<Lang, string> = { ja: "文字は中央揃え", en: "text centred", zh: "文字居中", ko: "텍스트 가운데 정렬" };
+    const centred: Record<LegacyLang, string> = { ja: "文字は中央揃え", en: "text centred", zh: "文字居中", ko: "텍스트 가운데 정렬" };
     expect(cardLayout(lang, { textAlign: "start" })).not.toContain(centred[lang]);
     expect(cardLayout(lang, { textAlign: "center" })).toContain(centred[lang]);
   });
@@ -304,7 +307,7 @@ describe("buildPrompt structure", () => {
 describe("buildPrompt for the camera, map and dropdown parts", () => {
   afterEach(() => setGlobalLang("ja"));
 
-  const NOUN: Record<Lang, [camera: string, map: string]> = {
+  const NOUN: Record<LegacyLang, [camera: string, map: string]> = {
     ja: ["カメラプレビュー", "地図"],
     en: ["camera preview", "map"],
     zh: ["相机预览", "地图"],
@@ -353,7 +356,7 @@ describe("scrollable tab rows in the prompt", () => {
     frames: [{ id: "f", name: "Home", x: 0, y: 0 }],
     groups: [{ id: "g", x: 0, y: 100, axis: "x", items: [withTabs(n)] }],
   });
-  const marker: Record<Lang, string> = { ja: "横にスクロールするタブ", en: "horizontally scrolling tab row", zh: "可横向滚动", ko: "가로로 스크롤되는 탭" };
+  const marker: Record<LegacyLang, string> = { ja: "横にスクロールするタブ", en: "horizontally scrolling tab row", zh: "可横向滚动", ko: "가로로 스크롤되는 탭" };
 
   it.each(LANGS)("says a row of seven tabs scrolls in %s, and a row of five does not", (lang) => {
     expect(buildPrompt(doc(7), {}, undefined, lang)).toContain(marker[lang]);
@@ -389,16 +392,16 @@ describe("bottom sheet", () => {
 describe("cards and images laid out as a grid", () => {
   afterEach(() => setGlobalLang("ja"));
 
-  const GRID: Record<Lang, (cols: number) => string> = {
+  const GRID: Record<LegacyLang, (cols: number) => string> = {
     ja: (c) => `${c}列のグリッド`,
     en: (c) => `in ${c} columns`,
     zh: (c) => `${c} 列网格`,
     ko: (c) => `${c}열 그리드`,
   };
-  const ONE_ROW: Record<Lang, string> = { ja: "横一列に並べます", en: "in one row from left to right", zh: "横向排成一行", ko: "한 행에 다음 항목을 배치합니다" };
+  const ONE_ROW: Record<LegacyLang, string> = { ja: "横一列に並べます", en: "in one row from left to right", zh: "横向排成一行", ko: "한 행에 다음 항목을 배치합니다" };
 
   /* cells of `w` wide cards (or images) at the given column and row offsets inside a phone screen */
-  function layout(lang: Lang, cells: { x: number; y: number; kind?: Item["kind"]; w?: number }[]) {
+  function layout(lang: LegacyLang, cells: { x: number; y: number; kind?: Item["kind"]; w?: number }[]) {
     setGlobalLang(lang);
     const doc = fixture();
     doc.groups = cells.map((c, i) => ({
@@ -447,7 +450,7 @@ describe("cards and images laid out as a grid", () => {
 });
 
 describe("a screen whose body scrolls", () => {
-  const SCROLLS: Record<Lang, string> = {
+  const SCROLLS: Record<LegacyLang, string> = {
     ja: "画面の長さは 1784dp で、端末に映る 892dp より長いため、本文は縦にスクロールします。",
     en: "The screen runs 1784dp, longer than the 892dp the device shows, so its body scrolls vertically;",
     zh: "屏幕总长 1784dp，超过设备可显示的 892dp，因此内容区域可纵向滚动；",
