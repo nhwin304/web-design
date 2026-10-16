@@ -10,6 +10,7 @@ const CATEGORY_TEXT = {
   ja: { actions: "操作", navigation: "ナビゲーション", containment: "コンテナ", inputs: "入力", content: "コンテンツ", progress: "進捗" },
   zh: { actions: "操作", navigation: "导航", containment: "容器", inputs: "输入", content: "内容", progress: "进度" },
   ko: { actions: "동작", navigation: "내비게이션", containment: "컨테이너", inputs: "입력", content: "콘텐츠", progress: "진행 상태" },
+  vi: { actions: "Hành động", navigation: "Điều hướng", containment: "Vùng chứa", inputs: "Nhập liệu", content: "Nội dung", progress: "Tiến trình" },
 } satisfies Record<string, Record<Category, string>>;
 
 export function PartsPalette({
