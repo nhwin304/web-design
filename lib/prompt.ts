@@ -491,6 +491,55 @@ function itemEn(it: Item): string {
   }
 }
 
+
+/** Vietnamese part descriptions for AI prompts; preserve technical icon/token names. */
+function itemVi(it: Item): string {
+  const q = qe;
+  const noun = KIND_TEXT.vi[it.kind]?.noun ?? it.kind;
+  const label = hasText(it.label) ? q(it.label) : "không có nhãn";
+  const icon = it.icon ? `, biểu tượng ${it.icon}` : "";
+  const variant = VARIANT_TEXT.vi[it.variant];
+  switch (it.kind) {
+    case "button": return `nút ${variant} ${label}${icon}${buttonSize(it, "vi")}`;
+    case "iconButton": return `nút biểu tượng ${variant}, icon ${it.icon ?? "trống"}${iconButtonSize(it, "vi")}`;
+    case "fab": return `FAB ${variant}, icon ${it.icon ?? "trống"}${it.size ? `, kích thước ${it.size}dp` : ""}`;
+    case "extendedFab": return `FAB mở rộng ${label} (${variant}${it.size2 ? `, cao ${it.size2}dp` : ""})${icon}`;
+    case "carousel": return `băng chuyền ${CAROUSEL_TEXT.vi[carouselLayoutOf(it)]} gồm ${carouselCountOf(it)} thẻ, cao ${it.size2 ?? 180}dp, bo góc 16dp, cuộn ngang`;
+    case "datePicker": return `bộ chọn ngày dạng ${DATE_TEXT.vi[dateLayoutOf(it)]}, chọn ngày hiện tại`;
+    case "timePicker": return `bộ chọn giờ dạng ${TIME_TEXT.vi[timeLayoutOf(it)]}, chọn giờ hiện tại và hỗ trợ AM/PM`;
+    case "chip": return `thẻ nhỏ ${label}${it.checked ? " (đã chọn)" : ""}${icon}${chipHeightText(it, "vi")}`;
+    case "topAppBar": return `thanh ứng dụng trên, tiêu đề ${label}${icon}${it.icon2 ? `, biểu tượng bên phải ${it.icon2}` : ""}`;
+    case "bottomNav":
+    case "navRail": return `${noun} gồm ${(it.tabs ?? []).length} mục: ${(it.tabs ?? []).map((tab) => `${q(tab.label || "không tên")} (${tab.icon || "không biểu tượng"})`).join(", ")}; mục chọn thứ ${(it.selected ?? 0) + 1}${it.kind === "navRail" ? `, ${it.railExpanded ? "đã mở rộng" : "đã thu gọn"}, ${it.railModal ? "lớp phủ modal" : "trong bố cục"}` : ""}`;
+    case "searchBar": return `thanh tìm kiếm ${it.variant === "outlined" ? "có viền" : ""}, gợi ý ${label}`;
+    case "card": return `thẻ nội dung ${variant}, tiêu đề ${label}${hasText(it.supporting) ? `, mô tả ${q(it.supporting!)}` : ""}${it.size2 ? `, cao ${it.size2}dp` : ""}${it.fill ? `, nền ${it.fill}` : ""}`;
+    case "listItem": return `mục danh sách ${label}${hasText(it.supporting) ? `, mô tả ${q(it.supporting!)}` : ""}${icon}${it.switch ? `, công tắc phía cuối (${it.checked ? "bật" : "tắt"})` : ""}`;
+    case "dialog": return `hộp thoại với tiêu đề ${label}${hasText(it.supporting) ? `, nội dung ${q(it.supporting!)}` : ""}, nút Hủy / Đồng ý`;
+    case "snackbar": return `thông báo nhanh ${label}${hasText(it.supporting) ? `, hành động ${q(it.supporting!)}` : ""}`;
+    case "textField": return `ô nhập ${variant}, nhãn ${label}${icon}${hasText(it.supporting) ? `, văn bản phụ ${q(it.supporting!)}` : ""}`;
+    case "select": return `menu thả xuống ${variant}, nhãn ${label}, các lựa chọn: ${(it.tabs ?? []).map((tab) => q(tab.label || "không tên")).join(", ")}${it.selected !== undefined ? `, chọn ban đầu mục ${it.selected + 1}` : ""}`;
+    case "switch": return `công tắc ${label} (mặc định ${it.checked ? "bật" : "tắt"})`;
+    case "checkbox": return `ô đánh dấu ${label} (mặc định ${it.checked ? "đã chọn" : "chưa chọn"})`;
+    case "slider": return `thanh trượt (giá trị ban đầu ${it.value ?? 40}%)`;
+    case "text": return `văn bản ${label}, ${it.size ?? 28}sp${it.bold ? ", in đậm" : ""}`;
+    case "image": return `hình ảnh ${imageDims(it)}${imageSrc(it) ? ` (nguồn ${imageSrc(it)})` : it.src ? " (ảnh được cung cấp)" : " (ảnh giữ chỗ)"}`;
+    case "camera": return `vùng xem camera ${viewSize(it, 4 / 3)}`;
+    case "map": return `bản đồ ${viewSize(it, 3 / 4)}`;
+    case "divider": return "đường phân cách";
+    case "box": return `vùng chứa ${it.size ?? PHONE_W}×${it.size2 ?? 220}dp, nền ${it.fill ?? "surfaceContainerLow"}${it.radiusTop ? `, bo góc trên ${it.radiusTop}dp` : ""}`;
+    case "bottomSheet": return `bảng dưới ${it.size ?? PHONE_W}×${it.size2 ?? 320}dp, nền ${it.fill ?? "surfaceContainerLow"}, bo góc trên ${it.radiusTop ?? 28}dp`;
+    case "loadingIndicator": return `chỉ báo đang tải M3 Expressive${it.contained ? " có vùng chứa" : ""}`;
+    case "linearProgress":
+    case "circularProgress": return `${it.kind === "linearProgress" ? "thanh" : "vòng"} tiến trình${it.wavy ? " dạng sóng" : ""} (${it.value === undefined ? "không xác định" : `${it.value}%`}${progressThickness(it) !== 4 ? `, độ dày ${progressThickness(it)}dp` : ""})`;
+    case "splitButton": return `nút tách ${variant} ${label}${icon}, có mũi tên mở menu`;
+    case "fabMenu": return `menu FAB ${variant} gồm ${(it.tabs ?? []).length} hành động: ${(it.tabs ?? []).map((tab) => q(tab.label)).join(", ")}`;
+    case "toolbar": return `thanh công cụ nổi ${variant} với các icon: ${(it.tabs ?? []).map((tab) => tab.icon).join(", ")}`;
+    case "tabs": return `thanh thẻ${isScrollableTabs(it) ? " có thể cuộn ngang" : ""}, gồm ${(it.tabs ?? []).length} thẻ: ${(it.tabs ?? []).map((tab) => q(tab.label)).join(", ")}; mục chọn thứ ${(it.selected ?? 0) + 1}`;
+    case "radio": return `nút chọn một ${label} (${it.checked ? "đã chọn" : "chưa chọn"})`;
+    default: return noun;
+  }
+}
+
 function itemZh(it: Item): string {
   const q = qz;
   const v = VARIANT_TEXT.zh[it.variant];
@@ -679,7 +728,7 @@ function boxCorners(it: Item, lang: Lang): string {
   return `corner radius ${t}dp top / ${b}dp bottom`;
 }
 
-const itemText = (it: Item, lang: Lang) => (lang === "ja" ? itemJa(it) : lang === "zh" ? itemZh(it) : lang === "ko" ? itemKo(it) : itemEn(it));
+const itemText = (it: Item, lang: Lang) => (lang === "ja" ? itemJa(it) : lang === "zh" ? itemZh(it) : lang === "ko" ? itemKo(it) : lang === "vi" ? itemVi(it) : itemEn(it));
 
 /* ================= connected runs ================= */
 
@@ -716,6 +765,12 @@ function groupText(g: Group, lang: Lang): string {
       : g.items.map((it) => `${q(it.label || "레이블 없음")}(${vt[it.variant]})`).join(", ");
     return `${names} 버튼 ${g.items.length}개를 가로로 연결한 버튼 그룹${same ? `(${vt[g.items[0].variant]})` : ""}`;
   }
+  if (lang === "vi") {
+    if (kind === "listItem") return `danh sách ${g.items.length} mục theo chiều dọc: ${g.items.map(itemVi).join("; ")}`;
+    if (kind === "chip") return `nhóm chip theo hàng ngang: ${g.items.map(itemVi).join(", ")}`;
+    if (kind === "iconButton") return `nhóm nút biểu tượng nối nhau: ${g.items.map(itemVi).join(", ")}`;
+    return `nhóm ${g.items.length} nút nối nhau: ${g.items.map(itemVi).join(", ")}`;
+  }
   if (kind === "listItem") return `a list of ${g.items.length} items, top to bottom: ${g.items.map(itemEn).join("; ")}`;
   if (kind === "chip") return `a chip group: ${g.items.map((it) => q(it.label) + (it.checked ? " (selected)" : "")).join(", ")}${chipRunHeightText(g.items, "en")}`;
   if (kind === "iconButton") return `a connected group of icon buttons: ${g.items.map((it) => it.icon ?? "empty").join(", ")}`;
@@ -730,9 +785,13 @@ function groupName(g: Group, lang: Lang): string {
   const it = g.items[0];
   const noun = KIND_TEXT[lang][it.kind]?.noun ?? it.kind;
   const q = quote(lang);
+  if (g.items.length > 1 && lang === "vi") return `nhóm ${noun}`;
   if (g.items.length > 1) return lang === "en" ? `the ${noun} group` : lang === "zh" ? `${noun}组` : lang === "ko" ? `${noun} 그룹` : `${noun}のグループ`;
+  if (it.kind === "box" && lang === "vi") return "vùng chứa";
   if (it.kind === "box") return lang === "en" ? "the box" : lang === "zh" ? "容器框" : lang === "ko" ? "상자" : "ボックス";
+  if (it.kind === "bottomSheet" && lang === "vi") return "bảng dưới";
   if (it.kind === "bottomSheet") return lang === "en" ? "the bottom sheet" : lang === "zh" ? "底部面板" : lang === "ko" ? "하단 시트" : "ボトムシート";
+  if (hasText(it.label) && it.kind !== "text" && lang === "vi") return `${noun} ${q(it.label)}`;
   if (hasText(it.label) && it.kind !== "text") return lang === "en" ? `the ${q(it.label)} ${noun}` : `${q(it.label)}${lang === "ko" ? " " : ""}${noun}`;
   return lang === "en" ? `the ${noun}` : noun;
 }
@@ -749,18 +808,20 @@ function actionText(a: Action, frames: Frame[], lang: Lang): string | null {
     if (lang === "ja") return `${href} をブラウザの別タブで開く`;
     if (lang === "zh") return `在浏览器的新标签页中打开 ${href}`;
     if (lang === "ko") return `${href}를 브라우저 새 탭에서 연다`;
+    if (lang === "vi") return `mở ${href} trong thẻ trình duyệt mới`;
     return `opens ${href} in a new browser tab`;
   }
   if (a.to === BACK_TARGET) {
-    return lang === "ja" ? "前の画面に戻る（入ったときの遷移を逆再生する）" : lang === "zh" ? "返回上一个屏幕（反向播放进入时的过渡动画）" : lang === "ko" ? "이전 화면으로 돌아간다(진입 전환을 반대로 재생)" : "goes back to the previous screen (playing the entry transition in reverse)";
+    return lang === "vi" ? "quay về màn hình trước (phát ngược hiệu ứng chuyển cảnh)" : lang === "ja" ? "前の画面に戻る（入ったときの遷移を逆再生する）" : lang === "zh" ? "返回上一个屏幕（反向播放进入时的过渡动画）" : lang === "ko" ? "이전 화면으로 돌아간다(진입 전환을 반대로 재생)" : "goes back to the previous screen (playing the entry transition in reverse)";
   }
   const target = frames.find((f) => f.id === a.to);
   if (!target) return null;
   const tr = TRANSITION_TEXT[lang][a.transition];
-  const name = q(target.name || (lang === "en" ? "screen" : lang === "zh" ? "屏幕" : lang === "ko" ? "화면" : "画面"));
+  const name = q(target.name || (lang === "en" ? "screen" : lang === "zh" ? "屏幕" : lang === "ko" ? "화면" : lang === "vi" ? "màn hình" : "画面"));
   if (lang === "ja") return `${name}画面へ${a.transition !== "none" ? `${tr}で` : ""}遷移する`;
   if (lang === "zh") return `${a.transition !== "none" ? `以${tr}的方式` : ""}跳转到${name}屏幕`;
   if (lang === "ko") return `${name} 화면으로${a.transition !== "none" ? ` ${tr} 전환하여` : ""} 이동한다`;
+  if (lang === "vi") return `chuyển đến màn hình ${name}${a.transition !== "none" ? ` bằng hiệu ứng ${tr}` : ""}`;
   return `opens the ${name} screen${a.transition !== "none" ? ` with ${tr}` : ""}`;
 }
 
@@ -775,12 +836,14 @@ function slotName(it: Item, slot: string, lang: Lang): string {
     if (lang === "ja") return `${label}の${menu ? "メニュー項目" : "項目"}`;
     if (lang === "zh") return `${label}${menu ? "菜单项" : "项"}`;
     if (lang === "ko") return `${label} ${menu ? "메뉴 항목" : "항목"}`;
+    if (lang === "vi") return `${menu ? "mục menu" : "mục điều hướng"} ${label}`;
     return `the ${label} ${menu ? "menu item" : "destination"}`;
   }
   const icon = slot === "icon2" ? it.icon2 : it.icon;
   if (lang === "ja") return `${slot === "icon2" ? "右" : "左"}の ${icon ?? ""} アイコンボタン`;
   if (lang === "zh") return `${slot === "icon2" ? "右侧" : "左侧"}的 ${icon ?? ""} 图标按钮`;
   if (lang === "ko") return `${slot === "icon2" ? "오른쪽" : "왼쪽"} ${icon ?? ""} 아이콘 버튼`;
+  if (lang === "vi") return `nút biểu tượng ${icon ?? ""} ở ${slot === "icon2" ? "bên phải" : "bên trái"}`;
   return `the ${icon ?? ""} icon button on the ${slot === "icon2" ? "right" : "left"}`;
 }
 
@@ -789,18 +852,19 @@ function notes(g: Group, frames: Frame[], lang: Lang): string[] {
   const q = quote(lang);
   for (const it of g.items) {
     const noun = KIND_TEXT[lang][it.kind]?.noun ?? it.kind;
-    const name = hasText(it.label) && it.kind !== "text" ? (lang === "en" ? `The ${q(it.label)} ${noun}` : `${q(it.label)}${lang === "ko" ? " " : ""}${noun}`) : lang === "en" ? `The ${noun}` : hasText(it.label) ? (lang === "ja" ? `テキスト${q(it.label)}` : lang === "zh" ? `文本${q(it.label)}` : `텍스트 ${q(it.label)}`) : noun;
+    const name = lang === "vi" ? `${noun} ${it.label ? q(it.label) : ""}` : hasText(it.label) && it.kind !== "text" ? (lang === "en" ? `The ${q(it.label)} ${noun}` : `${q(it.label)}${lang === "ko" ? " " : ""}${noun}`) : lang === "en" ? `The ${noun}` : hasText(it.label) ? (lang === "ja" ? `テキスト${q(it.label)}` : lang === "zh" ? `文本${q(it.label)}` : `텍스트 ${q(it.label)}`) : noun;
     const parts: string[] = [];
     if (it.action) {
       const a = actionText(it.action, frames, lang);
-      if (a) parts.push(lang === "ja" ? `タップすると${a}` : lang === "zh" ? `点击后${a}` : lang === "ko" ? `탭하면 ${a}` : `${a} when tapped`);
+      if (a) parts.push(lang === "vi" ? `khi chạm sẽ ${a}` : lang === "ja" ? `タップすると${a}` : lang === "zh" ? `点击后${a}` : lang === "ko" ? `탭하면 ${a}` : `${a} when tapped`);
     }
     for (const [slot, action] of Object.entries(it.actions ?? {})) {
       if (!action) continue;
       const a = actionText(action, frames, lang);
       if (!a) continue;
       const s = slotName(it, slot, lang);
-      if (lang === "en") out.push(`Tapping ${s} of ${name.replace(/^The /, "the ")} ${a}.`);
+      if (lang === "vi") out.push(`Chạm vào ${s} của ${name} sẽ ${a}.`);
+      else if (lang === "en") out.push(`Tapping ${s} of ${name.replace(/^The /, "the ")} ${a}.`);
       else parts.push(lang === "ja" ? `${s}をタップすると${a}` : lang === "zh" ? `点击${s}后${a}` : `${s}을 탭하면 ${a}`);
     }
     if (it.toggle) {
@@ -821,6 +885,12 @@ function notes(g: Group, frames: Frame[], lang: Lang): string[] {
         else if (icon === null) changes.push("图标消失");
         if (variant) changes.push(`样式变为${vt[variant]}`);
         parts.push(`做成每次点击都切换开/关状态的切换按钮${changes.length ? `（开启时${changes.join("、")}）` : ""}`);
+      } else if (lang === "vi") {
+        if (label !== undefined) changes.push(`nhãn chuyển thành ${q(label)}`);
+        if (icon) changes.push(`biểu tượng chuyển thành ${icon}`);
+        else if (icon === null) changes.push("ẩn biểu tượng");
+        if (variant) changes.push(`kiểu chuyển thành ${vt[variant]}`);
+        parts.push(`nút chuyển giữa bật/tắt mỗi lần chạm${changes.length ? ` (khi bật: ${changes.join(", ")})` : ""}`);
       } else if (lang === "ko") {
         if (label !== undefined) changes.push(`변경할 레이블: ${qe(label)}`);
         if (icon) changes.push(`변경할 아이콘: ${icon}`);
@@ -840,6 +910,7 @@ function notes(g: Group, frames: Frame[], lang: Lang): string[] {
     if (lang === "ja") out.push(`${name}は、${parts.join("。また、")}。`);
     else if (lang === "zh") out.push(`${name}：${parts.join("；")}。`);
     else if (lang === "ko") out.push(`${name}: ${parts.join(". 또한 ")}.`);
+    else if (lang === "vi") out.push(`${name}: ${parts.join(". Ngoài ra, ")}.`);
     else out.push(`${name} ${parts.join(". It also ")}.`);
   }
   return out;
@@ -859,6 +930,7 @@ function swipeNotes(f: Frame, frames: Frame[], lang: Lang): string[] {
     if (lang === "ja") out.push(`${name}画面は、${sw}すると指の動きに追従して${a}。`);
     else if (lang === "zh") out.push(`${name}屏幕：${sw}时跟随手指移动并${a}。`);
     else if (lang === "ko") out.push(`${name} 화면은 ${sw}하면 손가락을 따라 움직이며 ${a}.`);
+    else if (lang === "vi") out.push(`Màn hình ${name}: khi ${sw}, nội dung di chuyển theo ngón tay và ${a}.`);
     else out.push(`The ${name} screen ${a} when ${sw}; the screen follows the finger while dragging.`);
   }
   return out;
@@ -941,6 +1013,11 @@ function zone(bb: Rect, within: Rect, lang: Lang, phone: boolean): string {
     const hh = horiz < 0 ? "" : [" 왼쪽 정렬로", "", " 오른쪽 정렬로"][horiz];
     return `${v}${hh}`;
   }
+  if (lang === "vi") {
+    const v = ["Phía trên", "Chính giữa", "Phía dưới"][vert];
+    const hh = horiz < 0 ? "" : [", căn trái", ", căn giữa", ", căn phải"][horiz];
+    return `${v}${hh}`;
+  }
   const v = ["Near the top", "In the middle", "Near the bottom"][vert];
   const hh = horiz < 0 ? "" : [", aligned left", ", centered", ", aligned right"][horiz];
   return `${v}${hh}`;
@@ -950,7 +1027,7 @@ function zone(bb: Rect, within: Rect, lang: Lang, phone: boolean): string {
 function rowText(row: LNode[], where: string, lang: Lang, within: Rect): string {
   if (row.length === 1) {
     const d = groupText(row[0].g, lang);
-    return lang === "ja" ? `${where}${d}を置きます。` : lang === "zh" ? `${where}放置${d}。` : lang === "ko" ? `${where} 다음 항목을 배치합니다: ${d}.` : `${where}: ${d}.`;
+    return lang === "vi" ? `${where}: ${d}.` : lang === "ja" ? `${where}${d}を置きます。` : lang === "zh" ? `${where}放置${d}。` : lang === "ko" ? `${where} 다음 항목을 배치합니다: ${d}.` : `${where}: ${d}.`;
   }
   const last = row[row.length - 1];
   const fillsRight = last.bb.r >= within.r - 24;
@@ -966,6 +1043,10 @@ function rowText(row: LNode[], where: string, lang: Lang, within: Rect): string 
   if (lang === "ko") {
     const stretch = fillsRight ? `, 마지막 항목(${groupName(last.g, "ko")})은 오른쪽 끝까지 남은 너비를 채웁니다` : "";
     return `${where}, 왼쪽부터 한 행에 다음 항목을 배치합니다: ${descs.join(", ")}(같은 줄에 세로 중앙 정렬하고 쌓거나 줄 바꿈하지 않음${stretch}).`;
+  }
+  if (lang === "vi") {
+    const stretch = fillsRight ? `; ${groupName(last.g, "vi")} kéo giãn đến mép phải` : "";
+    return `${where}, bố trí trên một hàng từ trái sang phải: ${descs.join(", ")} (căn giữa dọc, không xếp chồng hoặc xuống dòng${stretch}).`;
   }
   const stretch = fillsRight ? `; ${groupName(last.g, "en")} stretches to fill the remaining width to the right edge` : "";
   return `${where}, in one row from left to right: ${descs.join(", ")} (keep them on the same line, vertically centered; never stack or wrap them${stretch}).`;
@@ -1024,6 +1105,7 @@ function gridText(grid: Grid, where: string, lang: Lang): string {
     return `${where}，将 ${n} 个${noun}排成 ${c} 列网格（列间距 ${grid.colGap}dp，行间距 ${grid.rowGap}dp；所有单元格等宽，从左到右、从上一行开始依次填充；保持 ${c} 列，不要排成一行或竖着堆叠）：${list}。`;
   if (lang === "ko")
     return `${where}, ${noun} ${n}개를 ${c}열 그리드로 배치합니다(열 간격 ${grid.colGap}dp, 행 간격 ${grid.rowGap}dp. 모든 칸은 같은 너비이며 왼쪽에서 오른쪽으로, 위 행부터 채운다. 한 줄로 늘어놓거나 세로로 쌓지 않고 ${c}열을 유지): ${list}.`;
+  if (lang === "vi") return `${where}, lưới ${n} ${noun} với ${c} cột (khoảng cách cột ${grid.colGap}dp, khoảng cách hàng ${grid.rowGap}dp; giữ nguyên ${c} cột, các ô cùng chiều rộng): ${list}.`;
   return `${where}, a grid of ${n} ${noun}s in ${c} columns (${grid.colGap}dp between columns, ${grid.rowGap}dp between rows; every cell the same width, filled left to right, row by row; keep ${c} columns rather than one long row or a single stack): ${list}.`;
 }
 
@@ -1049,7 +1131,7 @@ function describeNodes(lines: string[], nodes: LNode[], within: Rect | null, wid
     };
     let where: string;
     if (within) where = zone(rowRect, box, lang, phone);
-    else where = lang === "ja" ? (i === 0 ? "まず" : "その下に") : lang === "zh" ? (i === 0 ? "首先" : "其下方") : lang === "ko" ? (i === 0 ? "먼저" : "그 아래에") : i === 0 ? "First" : "Below that";
+    else where = lang === "vi" ? (i === 0 ? "Đầu tiên" : "Phía dưới") : lang === "ja" ? (i === 0 ? "まず" : "その下に") : lang === "zh" ? (i === 0 ? "首先" : "其下方") : lang === "ko" ? (i === 0 ? "먼저" : "그 아래에") : i === 0 ? "First" : "Below that";
     if (grid) {
       lines.push(`${pad}- ${gridText(grid, where, lang)}`);
       i += grid.rows.length - 1;
@@ -1067,14 +1149,14 @@ function describeNodes(lines: string[], nodes: LNode[], within: Rect | null, wid
     let line = rowText(row, where, lang, box);
     if (overlaps.length) {
       const o = overlaps.join(lang === "en" ? " and " : lang === "ko" ? ", " : "、");
-      line = lang === "ja" ? `${line.replace(/。$/, "")}（${o}の上に一部重ねて前面に描画）。` : lang === "zh" ? `${line.replace(/。$/, "")}（部分覆盖在${o}之上，绘制在前面）。` : lang === "ko" ? `${line.replace(/\.$/, "")}(${o} 위에 일부 겹쳐 앞쪽에 그림).` : `${line.replace(/\.$/, "")} (partly overlapping ${o}, drawn on top).`;
+      line = lang === "vi" ? `${line.replace(/\.$/, "")} (chồng lên ${o} và hiển thị phía trước).` : lang === "ja" ? `${line.replace(/。$/, "")}（${o}の上に一部重ねて前面に描画）。` : lang === "zh" ? `${line.replace(/。$/, "")}（部分覆盖在${o}之上，绘制在前面）。` : lang === "ko" ? `${line.replace(/\.$/, "")}(${o} 위에 일부 겹쳐 앞쪽에 그림).` : `${line.replace(/\.$/, "")} (partly overlapping ${o}, drawn on top).`;
     }
     lines.push(`${pad}- ${line}`);
     for (const n of row) {
       if (!n.children.length) continue;
       const name = groupName(n.g, lang);
       lines.push(
-        `${pad}  - ${lang === "ja" ? `${name}の中には次を重ねて配置します（ボックス側を背景にし、以下はその前面に載せる。位置はボックス内での相対位置）:` : lang === "zh" ? `${name}内部叠放以下内容（以容器为背景，下列组件绘制在其前面，位置为容器内的相对位置）：` : lang === "ko" ? `${name} 안에 다음 항목을 겹쳐 배치합니다(컨테이너를 배경으로 하고 다음 부품은 그 앞에 배치하며, 위치는 컨테이너 내부 기준):` : `Inside ${name}, layered on top of it (the container is the background; positions are relative to it):`}`,
+        `${pad}  - ${lang === "vi" ? `Bên trong ${name}, chồng các thành phần sau lên nền vùng chứa (vị trí tương đối với vùng chứa):` : lang === "ja" ? `${name}の中には次を重ねて配置します（ボックス側を背景にし、以下はその前面に載せる。位置はボックス内での相対位置）:` : lang === "zh" ? `${name}内部叠放以下内容（以容器为背景，下列组件绘制在其前面，位置为容器内的相对位置）：` : lang === "ko" ? `${name} 안에 다음 항목을 겹쳐 배치합니다(컨테이너를 배경으로 하고 다음 부품은 그 앞에 배치하며, 위치는 컨테이너 내부 기준):` : `Inside ${name}, layered on top of it (the container is the background; positions are relative to it):`}`,
       );
       describeNodes(lines, n.children, n.bb, widths, lang, depth + 2, false);
     }
@@ -1848,7 +1930,7 @@ export function promptMarks(text: string, frames: Frame[], lang: Lang = getLang(
     }
     const at = left.findIndex((f) => {
       const name = q(f.name || ph.screen);
-      return word ? l.startsWith(name + word) : l.startsWith(`The ${name} screen`);
+      return lang === "vi" ? l.startsWith(`Màn hình ${name}`) : word ? l.startsWith(name + word) : l.startsWith(`The ${name} screen`);
     });
     if (at < 0) return;
     const f = left.splice(at, 1)[0];
