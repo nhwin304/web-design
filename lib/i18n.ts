@@ -1,15 +1,17 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import { VI } from "./vi";
 
-export type Lang = "ja" | "en" | "zh" | "ko";
+export type Lang = "ja" | "en" | "zh" | "ko" | "vi";
 export const LANGS: { key: Lang; label: string }[] = [
   { key: "ja", label: "日本語" },
   { key: "en", label: "English" },
   { key: "zh", label: "中文" },
   { key: "ko", label: "한국어" },
+  { key: "vi", label: "Tiếng Việt" },
 ];
-export const isLang = (v: unknown): v is Lang => v === "ja" || v === "en" || v === "zh" || v === "ko";
+export const isLang = (v: unknown): v is Lang => v === "ja" || v === "en" || v === "zh" || v === "ko" || v === "vi";
 
 /* A module-level copy lets non-React helpers (item defaults, prompt text)
  * follow the language without threading it through every call. */
@@ -27,6 +29,7 @@ export const SEED_TEXT: Record<Lang, { favorite: string; share: string; inbox: s
   en: { favorite: "Favorite", share: "Share", inbox: "Inbox", starred: "Starred", archive: "Archive", supporting: "Supporting text", start: "Get started" },
   zh: { favorite: "收藏", share: "分享", inbox: "收件箱", starred: "已加星标", archive: "归档", supporting: "辅助文本", start: "开始" },
   ko: { favorite: "즐겨찾기", share: "공유", inbox: "받은편지함", starred: "별표 표시", archive: "보관함", supporting: "보조 텍스트", start: "시작하기" },
+  vi: { favorite: "Yêu thích", share: "Chia sẻ", inbox: "Hộp thư đến", starred: "Đã gắn sao", archive: "Lưu trữ", supporting: "Văn bản phụ", start: "Bắt đầu" },
 };
 
 /** ponytail: matches defaults by text; add provenance if authored copies must be distinguished. */
@@ -64,6 +67,7 @@ export const COLOR_TOKEN_TEXT = {
   ja: { surface: "サーフェス", surfaceContainerLow: "コンテナ（低）", surfaceContainer: "コンテナ", surfaceContainerHigh: "コンテナ（高）", surfaceContainerHighest: "コンテナ（最高）", primaryContainer: "プライマリコンテナ", secondaryContainer: "セカンダリコンテナ", tertiaryContainer: "ターシャリコンテナ", primary: "プライマリ", inverseSurface: "反転サーフェス" },
   zh: { surface: "表面", surfaceContainerLow: "低层容器", surfaceContainer: "容器", surfaceContainerHigh: "高层容器", surfaceContainerHighest: "最高层容器", primaryContainer: "主色容器", secondaryContainer: "次色容器", tertiaryContainer: "第三色容器", primary: "主色", inverseSurface: "反色表面" },
   ko: { surface: "표면", surfaceContainerLow: "낮은 컨테이너", surfaceContainer: "컨테이너", surfaceContainerHigh: "높은 컨테이너", surfaceContainerHighest: "가장 높은 컨테이너", primaryContainer: "주 색상 컨테이너", secondaryContainer: "보조 색상 컨테이너", tertiaryContainer: "세 번째 색상 컨테이너", primary: "주 색상", inverseSurface: "반전 표면" },
+  vi: { surface: "Bề mặt", surfaceContainerLow: "Vùng chứa thấp", surfaceContainer: "Vùng chứa", surfaceContainerHigh: "Vùng chứa cao", surfaceContainerHighest: "Vùng chứa cao nhất", primaryContainer: "Vùng chứa màu chính", secondaryContainer: "Vùng chứa màu phụ", tertiaryContainer: "Vùng chứa màu thứ ba", primary: "Màu chính", inverseSurface: "Bề mặt đảo màu" },
 };
 
 /** exported for the parity tests only; read strings through t() */
@@ -567,13 +571,13 @@ export const KO: Record<UIKey, string> = {
 };
 
 /** the locale each language writes its dates in */
-const LOCALE: Record<Lang, string> = { ja: "ja-JP", en: "en-US", zh: "zh-CN", ko: "ko-KR" };
+const LOCALE: Record<Lang, string> = { ja: "ja-JP", en: "en-US", zh: "zh-CN", ko: "ko-KR", vi: "vi-VN" };
 /** a day, written the way the language writes a date: what a date picker's headline says */
 export const dateHeadline = (lang: Lang, at: Date = new Date()) => new Intl.DateTimeFormat(LOCALE[lang], { weekday: "short", month: "short", day: "numeric" }).format(at);
 /** a month over its calendar grid */
 export const monthHeadline = (lang: Lang, at: Date = new Date()) => new Intl.DateTimeFormat(LOCALE[lang], { year: "numeric", month: "long" }).format(at);
 
-export const t = (key: UIKey, lang: Lang = current): string => (lang === "ko" ? KO[key] : UI[key][lang]);
+export const t = (key: UIKey, lang: Lang = current): string => (lang === "ko" ? KO[key] : lang === "vi" ? VI[key] : UI[key][lang]);
 
 /* ---- part defaults and nouns ---- */
 
@@ -733,6 +737,44 @@ export const KIND_TEXT: Record<
     datePicker: { noun: "날짜 선택기", label: "3월 17일 (월)" },
     timePicker: { noun: "시간 선택기" },
   },
+  vi: {
+    box: { noun: "vùng chứa" },
+    bottomSheet: { noun: "bảng dưới" },
+    button: { noun: "nút", label: "Nút" },
+    iconButton: { noun: "nút biểu tượng" },
+    fab: { noun: "nút hành động nổi" },
+    extendedFab: { noun: "nút hành động nổi mở rộng", label: "Tạo mới" },
+    chip: { noun: "thẻ nhỏ", label: "Thẻ" },
+    topAppBar: { noun: "thanh ứng dụng trên", label: "Tiêu đề" },
+    bottomNav: { noun: "thanh điều hướng" },
+    navRail: { noun: "thanh điều hướng bên" },
+    searchBar: { noun: "thanh tìm kiếm", label: "Tìm kiếm" },
+    card: { noun: "thẻ nội dung", label: "Tiêu đề thẻ", supporting: "Nhập văn bản mô tả tại đây." },
+    listItem: { noun: "mục danh sách", label: "Mục danh sách", supporting: "Văn bản phụ" },
+    dialog: { noun: "hộp thoại", label: "Xác nhận", supporting: "Bạn có muốn tiếp tục không?" },
+    snackbar: { noun: "thông báo nhanh", label: "Đã lưu", supporting: "Hoàn tác" },
+    textField: { noun: "ô nhập văn bản", label: "Nhãn" },
+    select: { noun: "menu thả xuống", label: "Nhãn" },
+    switch: { noun: "công tắc", label: "Thông báo" },
+    checkbox: { noun: "ô đánh dấu", label: "Tôi đồng ý" },
+    slider: { noun: "thanh trượt" },
+    text: { noun: "văn bản", label: "Tiêu đề" },
+    image: { noun: "hình ảnh" },
+    camera: { noun: "máy ảnh" },
+    map: { noun: "bản đồ" },
+    divider: { noun: "đường phân cách" },
+    loadingIndicator: { noun: "chỉ báo tải" },
+    linearProgress: { noun: "thanh tiến trình" },
+    circularProgress: { noun: "vòng tiến trình" },
+    splitButton: { noun: "nút tách", label: "Gửi" },
+    fabMenu: { noun: "menu nút hành động nổi" },
+    toolbar: { noun: "thanh công cụ" },
+    tabs: { noun: "thanh thẻ" },
+    radio: { noun: "nút chọn một", label: "Tùy chọn" },
+    carousel: { noun: "băng chuyền" },
+    datePicker: { noun: "bộ chọn ngày", label: "Thứ Hai, 17/03" },
+    timePicker: { noun: "bộ chọn giờ" },
+  },
 };
 
 /** default labels of a tab row */
@@ -741,6 +783,7 @@ export const TAB_LABELS: Record<Lang, string[]> = {
   en: ["For you", "Following", "Trending", "New", "Saved"],
   zh: ["推荐", "关注", "热门", "最新", "已保存"],
   ko: ["추천", "팔로잉", "인기", "새 항목", "저장됨"],
+  vi: ["Dành cho bạn", "Đang theo dõi", "Thịnh hành", "Mới", "Đã lưu"],
 };
 
 /** default entries of a FAB menu */
@@ -750,6 +793,7 @@ export const SELECT_OPTIONS: Record<Lang, string[]> = {
   en: ["Option 1", "Option 2", "Option 3"],
   zh: ["选项 1", "选项 2", "选项 3"],
   ko: ["옵션 1", "옵션 2", "옵션 3"],
+  vi: ["Tùy chọn 1", "Tùy chọn 2", "Tùy chọn 3"],
 };
 
 export const FAB_MENU_TABS: Record<Lang, { icon: string; label: string }[]> = {
@@ -781,6 +825,13 @@ export const FAB_MENU_TABS: Record<Lang, { icon: string; label: string }[]> = {
     { icon: "attach_file", label: "파일" },
     { icon: "event", label: "일정" },
   ],
+  vi: [
+    { icon: "edit", label: "Ghi chú" },
+    { icon: "photo_camera", label: "Ảnh" },
+    { icon: "mic", label: "Âm thanh" },
+    { icon: "attach_file", label: "Tệp" },
+    { icon: "event", label: "Sự kiện" },
+  ],
 };
 
 /** what a split button's arrow opens: the few things done with the main action beside it */
@@ -804,6 +855,11 @@ export const SPLIT_MENU_TABS: Record<Lang, { icon: string; label: string }[]> = 
     { icon: "schedule_send", label: "예약 전송" },
     { icon: "save", label: "임시 저장" },
     { icon: "share", label: "공유" },
+  ],
+  vi: [
+    { icon: "schedule_send", label: "Hẹn giờ gửi" },
+    { icon: "save", label: "Lưu bản nháp" },
+    { icon: "share", label: "Chia sẻ" },
   ],
 };
 
@@ -831,6 +887,12 @@ export const NAV_TABS: Record<Lang, { icon: string; label: string }[]> = {
     { icon: "search", label: "검색" },
     { icon: "favorite", label: "저장됨" },
     { icon: "settings", label: "설정" },
+  ],
+  vi: [
+    { icon: "home", label: "Trang chủ" },
+    { icon: "search", label: "Tìm kiếm" },
+    { icon: "favorite", label: "Đã lưu" },
+    { icon: "settings", label: "Cài đặt" },
   ],
 };
 
@@ -871,6 +933,7 @@ export const TRANSITION_TEXT: Record<Lang, Record<string, string>> = {
     expand: "확대",
     none: "애니메이션 없음",
   },
+  vi: { slide: "trượt vào từ bên phải", slideLeft: "trượt vào từ bên trái", slideUp: "trượt lên từ dưới", slideDown: "trượt xuống từ trên", fade: "mờ dần", expand: "mở rộng", none: "không có hiệu ứng" },
 };
 
 export const SWIPE_TEXT: Record<Lang, Record<string, string>> = {
@@ -878,4 +941,5 @@ export const SWIPE_TEXT: Record<Lang, Record<string, string>> = {
   en: { left: "swiping left", right: "swiping right", up: "swiping up", down: "swiping down" },
   zh: { left: "向左滑动", right: "向右滑动", up: "向上滑动", down: "向下滑动" },
   ko: { left: "왼쪽으로 스와이프", right: "오른쪽으로 스와이프", up: "위로 스와이프", down: "아래로 스와이프" },
+  vi: { left: "vuốt sang trái", right: "vuốt sang phải", up: "vuốt lên", down: "vuốt xuống" },
 };
