@@ -401,7 +401,7 @@ describe("cards and images laid out as a grid", () => {
   const ONE_ROW: Record<LegacyLang, string> = { ja: "横一列に並べます", en: "in one row from left to right", zh: "横向排成一行", ko: "한 행에 다음 항목을 배치합니다" };
 
   /* cells of `w` wide cards (or images) at the given column and row offsets inside a phone screen */
-  function layout(lang: Lang, cells: { x: number; y: number; kind?: Item["kind"]; w?: number }[]) {
+  function layout(lang: LegacyLang, cells: { x: number; y: number; kind?: Item["kind"]; w?: number }[]) {
     setGlobalLang(lang);
     const doc = fixture();
     doc.groups = cells.map((c, i) => ({
