@@ -1559,7 +1559,7 @@ function themeLines(th: Theme, lang: Lang): string[] {
   const n = THEME_NOTES[lang];
   const font = FONTS.find((f) => f.key === th.font);
   const fontName = font?.key === "system" ? (lang === "ja" ? "端末のシステムフォント" : lang === "zh" ? "设备的系统字体" : lang === "ko" ? "기기의 시스템 글꼴" : "the device's system font") : (font?.label ?? "Roboto");
-  const sp = lang === "en" || lang === "ko" ? " " : "";
+  const sp = lang === "en" || lang === "ko" || lang === "vi" ? " " : "";
   return [`- ${n.shape[th.shape]}`, `- ${FONT_NOTE[lang](fontName)}${sp}${th.emphasized ? n.emphasized : n.plainType}`, `- ${n.motion[th.motion]}`];
 }
 
@@ -1902,7 +1902,7 @@ export const PROMPT_OPTION_TEXT: Record<Lang, Record<PromptOption, { label: stri
     offline: { label: "오프라인 지원", icon: "cloud_off", line: "네트워크가 없어도 주요 기능을 쓸 수 있게 하고, 필요하면 재연결 시 동기화한다." },
   },
   vi: {
-    deliverable: { label: "Chỉ bàn giao sản phẩm, không cần xác minh", icon: "package_2", line: (pl) => `Không cần kiểm thử thủ công trên ${pl === "web" ? "trình duyệt" : "thiết bị/emulator"}. Khi triển khai xong, ${pl === "web" ? "chạy production build và bàn giao kết quả" : "xuất bản APK release đã ký"}.` },
+    deliverable: { label: "Chỉ bàn giao sản phẩm, không cần xác minh", icon: "package_2", line: (pl) => `Không cần kiểm thử thủ công trên ${pl === "web" ? "trình duyệt" : "thiết bị/emulator"}. Khi triển khai xong, ${pl === "web" ? "chạy production build và bàn giao kết quả" : "xuất bản release APK đã ký"}.` },
     tests: { label: "Viết kiểm thử", icon: "science", line: "Viết unit test cho logic chính và chỉ bàn giao khi tất cả kiểm thử đạt." },
     darkMode: { label: "Hỗ trợ giao diện tối", icon: "dark_mode", line: "Hỗ trợ bảng màu sáng và tối, tự đổi theo cài đặt hệ thống." },
     languages: { label: "Tiếng Việt và tiếng Anh", icon: "translate", line: "Chuẩn bị nội dung giao diện bằng tiếng Việt và tiếng Anh, tự chọn theo ngôn ngữ thiết bị." },
