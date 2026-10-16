@@ -487,6 +487,8 @@ export const LANG_FONT: Record<Lang, { family: string; google: string } | null> 
   zh: { family: "'Noto Sans SC'", google: "Noto+Sans+SC:wght@400;500;600;700" },
   ko: { family: "'Noto Sans KR'", google: "Noto+Sans+KR:wght@400;500;600;700" },
   en: null,
+  // Roboto already covers Vietnamese; avoid downloading an extra font.
+  vi: null,
 };
 
 /** a family list with the language's Noto face placed before the generic fallbacks */
