@@ -48,7 +48,7 @@ describe("Vietnamese localization", () => {
     expect(prompt).toContain("## Kiểu thành phần");
     expect(prompt).toContain("## Hướng dẫn chung");
     expect(prompt).toContain("nút nền đặc");
-    expect(prompt).toContain("Màn hình Trang chủ");
+    expect(prompt).toContain('Màn hình "Trang chủ"');
     const marks = promptMarks(prompt, doc.frames, "vi");
     expect(marks.some((m) => m.kind === "screen" && m.frameId === "f")).toBe(true);
     expect(PROMPT_OPTION_TEXT.vi.languages.label).toBe("Tiếng Việt và tiếng Anh");
