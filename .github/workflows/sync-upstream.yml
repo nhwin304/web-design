@@ -64,8 +64,8 @@ jobs:
         working-directory: web-design
         shell: bash
         env:
-          UPSTREAM_BASE: \${{ steps.check.outputs.current_sha }}
-          UPSTREAM_HEAD: \${{ steps.check.outputs.upstream_sha }}
+          UPSTREAM_BASE: ${{ steps.check.outputs.current_sha }}
+          UPSTREAM_HEAD: ${{ steps.check.outputs.upstream_sha }}
         run: |
           # Three-way merge retains local translations when upstream changes a nearby line.
           # Conflicts abort before commit; never overwrite fork changes silently.
