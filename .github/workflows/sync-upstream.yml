@@ -59,46 +59,85 @@ jobs:
             echo "New upstream revision: $upstream_sha"
           fi
 
-      - name: Create safe upstream patch
-        if: steps.check.outputs.changed == 'true'
-        shell: bash
-        run: |
-          # README.md is intentionally customized for this fork, so do not
-          # apply upstream README changes over the local project description.
-          # All other upstream changes must still pass the conflict check.
-          git -C upstream diff --binary \
-            "${{ steps.check.outputs.current_sha }}" \
-            "${{ steps.check.outputs.upstream_sha }}" \
-            -- . ':(exclude).github/workflows/**' \
-                 ':(top,exclude)README.md' > upstream.patch
-
-      - name: Apply upstream patch
+      - name: Reconcile upstream with fork changes
         if: steps.check.outputs.changed == 'true'
         working-directory: web-design
         shell: bash
+        env:
+          UPSTREAM_BASE: ${{ steps.check.outputs.current_sha }}
+          UPSTREAM_HEAD: ${{ steps.check.outputs.upstream_sha }}
         run: |
-          cp package.json ../package.web-design.json
-          cp package-lock.json ../package-lock.web-design.json
+          # Three-way merge retains local translations when upstream changes a nearby line.
+          # Conflicts abort before commit; never overwrite fork changes silently.
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import subprocess
+          import sys
+          import tempfile
 
-          git -C ../upstream show "${{ steps.check.outputs.current_sha }}:package.json" > package.json
-          git -C ../upstream show "${{ steps.check.outputs.current_sha }}:package-lock.json" > package-lock.json
+          root = pathlib.Path.cwd()
+          upstream = root.parent / "upstream"
+          old, new = os.environ["UPSTREAM_BASE"], os.environ["UPSTREAM_HEAD"]
 
-          if ! git apply --check --binary ../upstream.patch; then
-            cp ../package.web-design.json package.json
-            cp ../package-lock.web-design.json package-lock.json
-            echo "Upstream conflicts with local custom code. No files were committed."
-            exit 1
-          fi
+          def git(*args):
+              return subprocess.check_output(["git", "-C", str(upstream), *args])
 
-          git apply --binary ../upstream.patch
+          def blob(rev, path):
+              return git("show", f"{rev}:{path}")
 
+          diff = git("diff", "--name-status", "--no-renames", "-z", old, new, "--", ".",
+                     ":(exclude).github/workflows/**", ":(top,exclude)README.md").split(b"\0")
+          if diff[-1] == b"":
+              diff.pop()
+          if len(diff) % 2:
+              raise RuntimeError("Unexpected upstream diff format")
+          for i in range(0, len(diff), 2):
+              status, rel = diff[i].decode(), diff[i + 1].decode()
+              path = root / rel
+              before = None if status == "A" else blob(old, rel)
+              after = None if status == "D" else blob(new, rel)
+              local = path.read_bytes() if path.is_file() else None
+              if status == "A":
+                  if local is not None and local != after:
+                      raise RuntimeError(f"Conflict on new file {rel}")
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(after)
+              elif status == "D":
+                  if local != before:
+                      raise RuntimeError(f"Conflict on deleted file {rel}")
+                  path.unlink()
+              elif status == "M":
+                  if local is None:
+                      raise RuntimeError(f"Missing modified file {rel}")
+                  if local == before:
+                      path.write_bytes(after)
+                  elif local != after:
+                      if any(b"\0" in value for value in (local, before, after)):
+                          raise RuntimeError(f"Binary conflict {rel}")
+                      with tempfile.TemporaryDirectory() as tmp:
+                          files = [pathlib.Path(tmp, x) for x in ("ours", "base", "theirs")]
+                          for name, value in zip(files, (local, before, after)):
+                              name.write_bytes(value)
+                          result = subprocess.run(
+                              ["git", "merge-file", "-p", "-L", "fork", "-L", "base", "-L", "upstream",
+                               *(str(name) for name in files)], capture_output=True,
+                          )
+                          if result.returncode:
+                              sys.stderr.write(f"Merge conflict: {rel}. No commits made.\n")
+                              sys.stderr.buffer.write(result.stdout)
+                              sys.exit(1)
+                          path.write_bytes(result.stdout)
+              else:
+                  raise RuntimeError(f"Unsupported upstream status {status}: {rel}")
+              print(f"Applied upstream {status}: {rel}")
+          PY
           npm pkg set name="web-design"
           npm pkg set repository.type="git"
           npm pkg set repository.url="https://github.com/nhwin304/web-design.git"
           npm pkg set homepage="https://nhwin304.github.io/web-design/"
           npm install --package-lock-only --ignore-scripts
-
-          printf '%s\n' "${{ steps.check.outputs.upstream_sha }}" > .github/upstream-revision
+          printf '%s\n' "$UPSTREAM_HEAD" > .github/upstream-revision
 
       - name: Install dependencies
         if: steps.check.outputs.changed == 'true'
