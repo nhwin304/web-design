@@ -267,6 +267,7 @@ export const VI: Record<UIKey, string> = {
   "openLink": "Mở liên kết",
   "fabPlain": "Tiêu chuẩn",
   "fabExtended": "Mở rộng",
+  "fabScrollSwitch": "Thu gọn khi cuộn",
   "fabMenuAction": "Mở menu",
   "dropToRemove": "Xóa",
   "reorder": "Sắp xếp lại",
